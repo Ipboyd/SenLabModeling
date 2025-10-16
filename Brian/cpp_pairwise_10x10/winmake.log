@@ -1,0 +1,209 @@
+MSVC environment: 
+allusersprofile=C:\ProgramData
+appdata=C:\Users\ipboy\AppData\Roaming
+commandprompttype=Cross
+commonprogramfiles=C:\Program Files\Common Files
+commonprogramfiles(x86)=C:\Program Files (x86)\Common Files
+commonprogramw6432=C:\Program Files\Common Files
+computername=BME-SEN-05
+comspec=C:\WINDOWS\system32\cmd.exe
+configsetroot=C:\WINDOWS\ConfigSetRoot
+devenvdir=C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\
+driverdata=C:\Windows\System32\Drivers\DriverData
+efc_9088_1592913036=1
+extensionsdkdir=C:\Program Files (x86)\Microsoft SDKs\Windows Kits\10\ExtensionSDKs
+external_include=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.43.34808\ATLMFC\include;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include;C:\Program Files (x86)\Windows Kits\10\include\10.0.22621.0\ucrt;C:\Program Files (x86)\Windows Kits\10\\include\10.0.22621.0\\um;C:\Program Files (x86)\Windows Kits\10\\include\10.0.22621.0\\shared;C:\Program Files (x86)\Windows Kits\10\\include\10.0.22621.0\\winrt;C:\Program Files (x86)\Windows Kits\10\\include\10.0.22621.0\\cppwinrt
+framework40version=v4.0
+frameworkdir=C:\Windows\Microsoft.NET\Framework\
+frameworkdir32=C:\Windows\Microsoft.NET\Framework\
+frameworkdir64=C:\Windows\Microsoft.NET\Framework64\
+frameworkversion=v4.0.30319
+frameworkversion32=v4.0.30319
+frameworkversion64=v4.0.30319
+homedrive=C:
+homepath=\Users\ipboy
+igccsvc_db=AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA6vpWvBpaHUqF97clNhbxZgQAAAACAAAAAAAQZgAAAAEAACAAAAC1eLFIaEfAUV5kY1vLc+gEhNGxZrB/iogUYnCaWF27IQAAAAAOgAAAAAIAACAAAAAQjg7ajAv9ebRrSRMZInNopwDy4GBb20RXdUXmYuyrC2AAAADU+SUoGQuIleGXKMLmu3/49qv75PMbAHSw+daJtI/ZfNvNXStzItMIodge3Q3UwOyvim4DyX4uw1Khh9n5PamSYxRTbkFzlNvk+FXlzsOOfPBhiqNod7z47pBWVG8RoEZAAAAAZrFK1zDx+TYZsPR9kq7uoeIbdVaAFXQC1sWP4oUSaHPV/JhuBMZtp9D/st4rCEZnZ8+qzvGP29F5ThKQUB5fpA==
+include=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.43.34808\include;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.43.34808\ATLMFC\include;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\VS\include;C:\Program Files (x86)\Windows Kits\10\include\10.0.22621.0\ucrt;C:\Program Files (x86)\Windows Kits\10\\include\10.0.22621.0\\um;C:\Program Files (x86)\Windows Kits\10\\include\10.0.22621.0\\shared;C:\Program Files (x86)\Windows Kits\10\\include\10.0.22621.0\\winrt;C:\Program Files (x86)\Windows Kits\10\\include\10.0.22621.0\\cppwinrt
+lib=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.43.34808\ATLMFC\lib\x64;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.43.34808\lib\x64;C:\Program Files (x86)\Windows Kits\10\lib\10.0.22621.0\ucrt\x64;C:\Program Files (x86)\Windows Kits\10\\lib\10.0.22621.0\\um\x64
+libpath=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.43.34808\ATLMFC\lib\x64;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.43.34808\lib\x64;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.43.34808\lib\x86\store\references;C:\Program Files (x86)\Windows Kits\10\UnionMetadata\10.0.22621.0;C:\Program Files (x86)\Windows Kits\10\References\10.0.22621.0;C:\Windows\Microsoft.NET\Framework\v4.0.30319
+localappdata=C:\Users\ipboy\AppData\Local
+logonserver=\\BME-SEN-05
+number_of_processors=32
+onedrive=C:\Users\ipboy\OneDrive
+onedriveconsumer=C:\Users\ipboy\OneDrive
+os=Windows_NT
+path=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.43.34808\bin\HostX86\x64;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.43.34808\bin\HostX86\x86;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\VC\VCPackages;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\TestWindow;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\bin\Roslyn;C:\Program Files\Microsoft Visual Studio\2022\Community\Team Tools\DiagnosticsHub\Collector;C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\\x86;C:\Program Files (x86)\Windows Kits\10\bin\\x86;C:\Program Files\Microsoft Visual Studio\2022\Community\\MSBuild\Current\Bin\amd64;C:\Windows\Microsoft.NET\Framework\v4.0.30319;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files\MATLAB\R2025b\bin;C:\Program Files\MATLAB\R2023b\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Users\ipboy\AppData\Local\Programs\Python\Python311\Scripts;C:\Users\ipboy\AppData\Local\Programs\Python\Python311\Lib\site-packages\graphviz;C:\Program Files\Graphviz\bin;C:\Program Files\Git\cmd;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Users\ipboy\AppData\Local\Programs\Python\Python311\Scripts\;C:\Users\ipboy\AppData\Local\Programs\Python\Python311\;C:\Users\ipboy\AppData\Local\Programs\Python\Python313\Scripts\;C:\Users\ipboy\AppData\Local\Programs\Python\Python313\;C:\Users\ipboy\AppData\Local\Programs\Python\Launcher\;C:\Users\ipboy\AppData\Local\Microsoft\WindowsApps;C:\Users\ipboy\AppData\Local\GitHubDesktop\bin;C:\Users\ipboy\AppData\Local\Programs\Julia-1.10.5\bin;C:\Users\ipboy\AppData\Local\Programs\Microsoft VS Code\bin;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\Ninja;C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\VC\Linux\bin\ConnectionManagerExe;C:\Program Files\Microsoft Visual Studio\2022\Community\VC\vcpkg
+pathext=.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
+platform=x64
+processor_architecture=AMD64
+processor_identifier=Intel64 Family 6 Model 183 Stepping 1, GenuineIntel
+processor_level=6
+processor_revision=b701
+programdata=C:\ProgramData
+programfiles=C:\Program Files
+programfiles(x86)=C:\Program Files (x86)
+programw6432=C:\Program Files
+prompt=$P$G
+psmodulepath=C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules
+public=C:\Users\Public
+sessionname=Console
+systemdrive=C:
+systemroot=C:\WINDOWS
+temp=C:\Users\ipboy\AppData\Local\Temp
+tmp=C:\Users\ipboy\AppData\Local\Temp
+ucrtversion=10.0.22621.0
+universalcrtsdkdir=C:\Program Files (x86)\Windows Kits\10\
+userdomain=BME-SEN-05
+userdomain_roamingprofile=BME-SEN-05
+username=ipboy
+userprofile=C:\Users\ipboy
+vcideinstalldir=C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\VC\
+vcinstalldir=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\
+vcpkg_root=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\vcpkg
+vctoolsinstalldir=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.43.34808\
+vctoolsredistdir=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Redist\MSVC\14.42.34433\
+vctoolsversion=14.43.34808
+visualstudioversion=17.0
+vs170comntools=C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\
+vscmd_arg_app_plat=Desktop
+vscmd_arg_host_arch=x86
+vscmd_arg_tgt_arch=x64
+vscmd_ver=17.13.6
+vsinstalldir=C:\Program Files\Microsoft Visual Studio\2022\Community\
+windir=C:\WINDOWS
+windowslibpath=C:\Program Files (x86)\Windows Kits\10\UnionMetadata\10.0.22621.0;C:\Program Files (x86)\Windows Kits\10\References\10.0.22621.0
+windowssdkbinpath=C:\Program Files (x86)\Windows Kits\10\bin\
+windowssdkdir=C:\Program Files (x86)\Windows Kits\10\
+windowssdklibversion=10.0.22621.0\
+windowssdkverbinpath=C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\
+windowssdkversion=10.0.22621.0\
+zes_enable_sysman=1
+__dotnet_add_32bit=1
+__dotnet_add_64bit=1
+__dotnet_preferred_bitness=32
+__vscmd_preinit_path=C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files\MATLAB\R2025b\bin;C:\Program Files\MATLAB\R2023b\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Users\ipboy\AppData\Local\Programs\Python\Python311\Scripts;C:\Users\ipboy\AppData\Local\Programs\Python\Python311\Lib\site-packages\graphviz;C:\Program Files\Graphviz\bin;C:\Program Files\Git\cmd;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Users\ipboy\AppData\Local\Programs\Python\Python311\Scripts\;C:\Users\ipboy\AppData\Local\Programs\Python\Python311\;C:\Users\ipboy\AppData\Local\Programs\Python\Python313\Scripts\;C:\Users\ipboy\AppData\Local\Programs\Python\Python313\;C:\Users\ipboy\AppData\Local\Programs\Python\Launcher\;C:\Users\ipboy\AppData\Local\Microsoft\WindowsApps;C:\Users\ipboy\AppData\Local\GitHubDesktop\bin;C:\Users\ipboy\AppData\Local\Programs\Julia-1.10.5\bin;C:\Users\ipboy\AppData\Local\Programs\Microsoft VS Code\bin
+py_vcruntime_redist=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\..\..\redist\MSVC\14.42.34433\onecore\x64\Microsoft.VC143.CRT\vcruntime140.dll
+
+Microsoft (R) Program Maintenance Utility Version 14.43.34810.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+	cl /c /EHsc /I. -I"C:\Users\ipboy\AppData\Local\Programs\Python\Python311\Library\include" /Ox /w /arch:AVX2 /MP  code_objects/after_run_neurongroup_1_spike_thresholder_codeobject.cpp /Focode_objects\after_run_neurongroup_1_spike_thresholder_codeobject.obj
+Microsoft (R) C/C++ Optimizing Compiler Version 19.43.34810 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+after_run_neurongroup_1_spike_thresholder_codeobject.cpp
+	cl /c /EHsc /I. -I"C:\Users\ipboy\AppData\Local\Programs\Python\Python311\Library\include" /Ox /w /arch:AVX2 /MP  code_objects/after_run_neurongroup_spike_thresholder_codeobject.cpp /Focode_objects\after_run_neurongroup_spike_thresholder_codeobject.obj
+Microsoft (R) C/C++ Optimizing Compiler Version 19.43.34810 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+after_run_neurongroup_spike_thresholder_codeobject.cpp
+	cl /c /EHsc /I. -I"C:\Users\ipboy\AppData\Local\Programs\Python\Python311\Library\include" /Ox /w /arch:AVX2 /MP  code_objects/after_run_poissongroup_spike_thresholder_codeobject.cpp /Focode_objects\after_run_poissongroup_spike_thresholder_codeobject.obj
+Microsoft (R) C/C++ Optimizing Compiler Version 19.43.34810 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+after_run_poissongroup_spike_thresholder_codeobject.cpp
+	cl /c /EHsc /I. -I"C:\Users\ipboy\AppData\Local\Programs\Python\Python311\Library\include" /Ox /w /arch:AVX2 /MP  code_objects/before_run_synapses_1_pre_push_spikes.cpp /Focode_objects\before_run_synapses_1_pre_push_spikes.obj
+Microsoft (R) C/C++ Optimizing Compiler Version 19.43.34810 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+before_run_synapses_1_pre_push_spikes.cpp
+	cl /c /EHsc /I. -I"C:\Users\ipboy\AppData\Local\Programs\Python\Python311\Library\include" /Ox /w /arch:AVX2 /MP  code_objects/before_run_synapses_pre_push_spikes.cpp /Focode_objects\before_run_synapses_pre_push_spikes.obj
+Microsoft (R) C/C++ Optimizing Compiler Version 19.43.34810 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+before_run_synapses_pre_push_spikes.cpp
+	cl /c /EHsc /I. -I"C:\Users\ipboy\AppData\Local\Programs\Python\Python311\Library\include" /Ox /w /arch:AVX2 /MP  code_objects/neurongroup_1_spike_resetter_codeobject.cpp /Focode_objects\neurongroup_1_spike_resetter_codeobject.obj
+Microsoft (R) C/C++ Optimizing Compiler Version 19.43.34810 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+neurongroup_1_spike_resetter_codeobject.cpp
+	cl /c /EHsc /I. -I"C:\Users\ipboy\AppData\Local\Programs\Python\Python311\Library\include" /Ox /w /arch:AVX2 /MP  code_objects/neurongroup_1_spike_thresholder_codeobject.cpp /Focode_objects\neurongroup_1_spike_thresholder_codeobject.obj
+Microsoft (R) C/C++ Optimizing Compiler Version 19.43.34810 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+neurongroup_1_spike_thresholder_codeobject.cpp
+	cl /c /EHsc /I. -I"C:\Users\ipboy\AppData\Local\Programs\Python\Python311\Library\include" /Ox /w /arch:AVX2 /MP  code_objects/neurongroup_1_stateupdater_codeobject.cpp /Focode_objects\neurongroup_1_stateupdater_codeobject.obj
+Microsoft (R) C/C++ Optimizing Compiler Version 19.43.34810 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+neurongroup_1_stateupdater_codeobject.cpp
+	cl /c /EHsc /I. -I"C:\Users\ipboy\AppData\Local\Programs\Python\Python311\Library\include" /Ox /w /arch:AVX2 /MP  code_objects/neurongroup_spike_resetter_codeobject.cpp /Focode_objects\neurongroup_spike_resetter_codeobject.obj
+Microsoft (R) C/C++ Optimizing Compiler Version 19.43.34810 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+neurongroup_spike_resetter_codeobject.cpp
+	cl /c /EHsc /I. -I"C:\Users\ipboy\AppData\Local\Programs\Python\Python311\Library\include" /Ox /w /arch:AVX2 /MP  code_objects/neurongroup_spike_thresholder_codeobject.cpp /Focode_objects\neurongroup_spike_thresholder_codeobject.obj
+Microsoft (R) C/C++ Optimizing Compiler Version 19.43.34810 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+neurongroup_spike_thresholder_codeobject.cpp
+	cl /c /EHsc /I. -I"C:\Users\ipboy\AppData\Local\Programs\Python\Python311\Library\include" /Ox /w /arch:AVX2 /MP  code_objects/neurongroup_stateupdater_codeobject.cpp /Focode_objects\neurongroup_stateupdater_codeobject.obj
+Microsoft (R) C/C++ Optimizing Compiler Version 19.43.34810 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+neurongroup_stateupdater_codeobject.cpp
+	cl /c /EHsc /I. -I"C:\Users\ipboy\AppData\Local\Programs\Python\Python311\Library\include" /Ox /w /arch:AVX2 /MP  code_objects/poissongroup_spike_thresholder_codeobject.cpp /Focode_objects\poissongroup_spike_thresholder_codeobject.obj
+Microsoft (R) C/C++ Optimizing Compiler Version 19.43.34810 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+poissongroup_spike_thresholder_codeobject.cpp
+	cl /c /EHsc /I. -I"C:\Users\ipboy\AppData\Local\Programs\Python\Python311\Library\include" /Ox /w /arch:AVX2 /MP  code_objects/synapses_1_pre_codeobject.cpp /Focode_objects\synapses_1_pre_codeobject.obj
+Microsoft (R) C/C++ Optimizing Compiler Version 19.43.34810 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+synapses_1_pre_codeobject.cpp
+	cl /c /EHsc /I. -I"C:\Users\ipboy\AppData\Local\Programs\Python\Python311\Library\include" /Ox /w /arch:AVX2 /MP  code_objects/synapses_1_pre_push_spikes.cpp /Focode_objects\synapses_1_pre_push_spikes.obj
+Microsoft (R) C/C++ Optimizing Compiler Version 19.43.34810 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+synapses_1_pre_push_spikes.cpp
+	cl /c /EHsc /I. -I"C:\Users\ipboy\AppData\Local\Programs\Python\Python311\Library\include" /Ox /w /arch:AVX2 /MP  code_objects/synapses_1_synapses_create_array_codeobject.cpp /Focode_objects\synapses_1_synapses_create_array_codeobject.obj
+Microsoft (R) C/C++ Optimizing Compiler Version 19.43.34810 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+synapses_1_synapses_create_array_codeobject.cpp
+	cl /c /EHsc /I. -I"C:\Users\ipboy\AppData\Local\Programs\Python\Python311\Library\include" /Ox /w /arch:AVX2 /MP  code_objects/synapses_pre_codeobject.cpp /Focode_objects\synapses_pre_codeobject.obj
+Microsoft (R) C/C++ Optimizing Compiler Version 19.43.34810 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+synapses_pre_codeobject.cpp
+	cl /c /EHsc /I. -I"C:\Users\ipboy\AppData\Local\Programs\Python\Python311\Library\include" /Ox /w /arch:AVX2 /MP  code_objects/synapses_pre_push_spikes.cpp /Focode_objects\synapses_pre_push_spikes.obj
+Microsoft (R) C/C++ Optimizing Compiler Version 19.43.34810 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+synapses_pre_push_spikes.cpp
+	cl /c /EHsc /I. -I"C:\Users\ipboy\AppData\Local\Programs\Python\Python311\Library\include" /Ox /w /arch:AVX2 /MP  code_objects/synapses_synapses_create_generator_codeobject.cpp /Focode_objects\synapses_synapses_create_generator_codeobject.obj
+Microsoft (R) C/C++ Optimizing Compiler Version 19.43.34810 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+synapses_synapses_create_generator_codeobject.cpp
+	cl /c /EHsc /I. -I"C:\Users\ipboy\AppData\Local\Programs\Python\Python311\Library\include" /Ox /w /arch:AVX2 /MP  main.cpp /Fomain.obj
+Microsoft (R) C/C++ Optimizing Compiler Version 19.43.34810 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+main.cpp
+	cl /c /EHsc /I. -I"C:\Users\ipboy\AppData\Local\Programs\Python\Python311\Library\include" /Ox /w /arch:AVX2 /MP  network.cpp /Fonetwork.obj
+Microsoft (R) C/C++ Optimizing Compiler Version 19.43.34810 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+network.cpp
+	cl /c /EHsc /I. -I"C:\Users\ipboy\AppData\Local\Programs\Python\Python311\Library\include" /Ox /w /arch:AVX2 /MP  objects.cpp /Foobjects.obj
+Microsoft (R) C/C++ Optimizing Compiler Version 19.43.34810 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+objects.cpp
+	cl /c /EHsc /I. -I"C:\Users\ipboy\AppData\Local\Programs\Python\Python311\Library\include" /Ox /w /arch:AVX2 /MP  run.cpp /Forun.obj
+Microsoft (R) C/C++ Optimizing Compiler Version 19.43.34810 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+run.cpp
+	cl /c /EHsc /I. -I"C:\Users\ipboy\AppData\Local\Programs\Python\Python311\Library\include" /Ox /w /arch:AVX2 /MP  synapses_classes.cpp /Fosynapses_classes.obj
+Microsoft (R) C/C++ Optimizing Compiler Version 19.43.34810 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+synapses_classes.cpp
+	link @sourcefiles.txt /LIBPATH:"C:\Users\ipboy\AppData\Local\Programs\Python\Python311\Library\lib" advapi32.lib /LIBPATH:. /OUT:main.exe
+Microsoft (R) Incremental Linker Version 14.43.34810.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+code_objects\after_run_neurongroup_1_spike_thresholder_codeobject code_objects\after_run_neurongroup_spike_thresholder_codeobject code_objects\after_run_poissongroup_spike_thresholder_codeobject code_objects\before_run_synapses_1_pre_push_spikes code_objects\before_run_synapses_pre_push_spikes code_objects\neurongroup_1_spike_resetter_codeobject code_objects\neurongroup_1_spike_thresholder_codeobject code_objects\neurongroup_1_stateupdater_codeobject code_objects\neurongroup_spike_resetter_codeobject code_objects\neurongroup_spike_thresholder_codeobject code_objects\neurongroup_stateupdater_codeobject code_objects\poissongroup_spike_thresholder_codeobject code_objects\synapses_1_pre_codeobject code_objects\synapses_1_pre_push_spikes code_objects\synapses_1_synapses_create_array_codeobject code_objects\synapses_pre_codeobject code_objects\synapses_pre_push_spikes code_objects\synapses_synapses_create_generator_codeobject main network objects run synapses_classes 
