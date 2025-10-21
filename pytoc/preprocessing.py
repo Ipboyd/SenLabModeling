@@ -140,7 +140,7 @@ if __name__ == "__main__":
     t_ref_rel = 10.0 
     rec = 2.0
     scale_factor = 1.0
-    spk_file_name = r"D:\School_Stuff\Rotation_1_Sep_Nov_Kamal_Sen\Code\MouseSpatialGrid-19-Chan\run\4-channel-PV-inputs\solve\IC_spks_on.mat"  # Replace with your .mat file path
+    spk_file_name = r"D:\School_Stuff\Rotation_1_Sep_Nov_Kamal_Sen\Code\MouseSpatialGrid-19-Chan\run\19-channel-PV-inputs\solve\IC_spks_on.mat"  # Replace with your .mat file path
     
     spikes = gen_poisson_inputs(t_ref, t_ref_rel, rec, scale_factor, spk_file_name,dt = dt, offset_val = offset_val)
     print("Generated spike train shape:", spikes.shape)
