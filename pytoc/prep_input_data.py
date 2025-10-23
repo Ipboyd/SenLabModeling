@@ -137,7 +137,6 @@ if __name__ == "__main__":
     masker_locs, target_locs = prep_input.make_grid_target_masker_locs()
     list_locs = list(zip(masker_locs, target_locs))
     
-<<<<<<< HEAD
     spks = prep_input.process_input(
                 strf_path=path, 
                 list_locs=list_locs, 
@@ -146,24 +145,3 @@ if __name__ == "__main__":
     
     print("Generated spike train keys:", spks.keys())
     
-=======
-    progress_bar = tqdm(zip(masker_locs, target_locs))
-    for m_loc, t_loc in progress_bar:
-        
-        progress_bar.set_description(f'Generating spikes for Masker Loc: {m_loc}, Target Loc: {t_loc}')
-        on_spks_stimulus_1 = gen_IC_spks(spatialCurves=spatialCurves, 
-                            azi=azi, 
-                            tmax=tmax, 
-                            locs=(m_loc, t_loc), 
-                            fr_targets=fr_target_on[0], 
-                            fr_masker=fr_masker, 
-                            newStrfGain=newStrfGain, 
-                            strfGain=strfGain, 
-                            trials=10, 
-                            padToTime = 3500, 
-                            dt=0.1)
-
-
-
-
->>>>>>> 8468fe1e97cf5ef6777d4c65ee609ee5a1642b43
