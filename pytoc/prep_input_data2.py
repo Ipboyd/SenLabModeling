@@ -2,45 +2,6 @@ import filecmp
 import numpy as np
 from tqdm import tqdm
 
-def genSpatiallyTunedChans(azi, chans=19, sigma=300):
-    
-    spatialCurves = np.zeros((chans,chans))
-    for idx in range(chans): 
-        spatialCurves[idx,:]= np.exp(((-1/2)*(azi-azi[idx])**2)*(1/sigma)) 
-        
-    return spatialCurves
-
-
-def make_grid_target_masker_locs(azi):
-    grid_x, grid_y = np.meshgrid(np.arange(len(azi)), np.arange(len(azi))) # masker, target
-    masker_locs = grid_x.flatten() # masker
-    target_locs = grid_y.flatten() # target
-    return masker_locs, target_locs  
-
-def gen_IC_spks(spatialCurves, azi, tmax, locs, fr_targets, fr_masker, newStrfGain, strfGain, trials=1, padToTime = 3500, dt=0.1):
-    
-    m_loc, t_loc = locs
-    singleConfigSpks = np.zeros((trials,spatialCurves.shape[0],tmax))  
-    
-    for t in range(trials):
-        for ch in range(spatialCurves.shape[0]):
-            t_wt = spatialCurves[ch,azi==azi[t_loc]] if t_loc is not None else 0.
-            m_wt = spatialCurves[ch,azi==azi[m_loc]] if m_loc is not None else 0.
-
-            if t_wt + m_wt == 0: raise Exception(f'No contribution from target or masker at channel {ch}, trial {t+1}. Both cannot be None.')
-                
-            singleConfigSpks[t,ch,:] = t_wt*fr_targets.squeeze() + m_wt*fr_masker[t].squeeze()      
-
-            if t_wt + m_wt >= 1: singleConfigSpks[t,ch,:] = singleConfigSpks[t,ch,:] / (t_wt + m_wt)
-    
-    if singleConfigSpks.shape[2] < padToTime/dt:
-        padSize = int(padToTime/dt)-singleConfigSpks.shape[2]
-        singleConfigSpks = np.concatenate([singleConfigSpks, np.zeros((trials,spatialCurves.shape[0],padSize))], axis=2)
-    
-    spks =  singleConfigSpks.transpose(2,1,0) * newStrfGain / strfGain  # Shape to (time, chans, trials)
-
-    return spks
-
 
 if __name__ == "__main__":
     
@@ -85,6 +46,48 @@ if __name__ == "__main__":
                             trials=10, 
                             padToTime = 3500, 
                             dt=0.1)
+
+def genSpatiallyTunedChans(azi, chans=19, sigma=300):
+    
+    spatialCurves = np.zeros((chans,chans))
+    for idx in range(chans): 
+        spatialCurves[idx,:]= np.exp(((-1/2)*(azi-azi[idx])**2)*(1/sigma)) 
+        
+    return spatialCurves
+
+
+def make_grid_target_masker_locs(azi):
+    grid_x, grid_y = np.meshgrid(np.arange(len(azi)), np.arange(len(azi))) # masker, target
+    masker_locs = grid_x.flatten() # masker
+    target_locs = grid_y.flatten() # target
+    return masker_locs, target_locs  
+
+def gen_IC_spks(spatialCurves, azi, tmax, locs, fr_targets, fr_masker, newStrfGain, strfGain, trials=1, padToTime = 3500, dt=0.1):
+    
+    m_loc, t_loc = locs
+    singleConfigSpks = np.zeros((trials,spatialCurves.shape[0],tmax))  
+    
+    for t in range(trials):
+        for ch in range(spatialCurves.shape[0]):
+            t_wt = spatialCurves[ch,azi==azi[t_loc]] if t_loc is not None else 0.
+            m_wt = spatialCurves[ch,azi==azi[m_loc]] if m_loc is not None else 0.
+
+            if t_wt + m_wt == 0: raise Exception(f'No contribution from target or masker at channel {ch}, trial {t+1}. Both cannot be None.')
+                
+            singleConfigSpks[t,ch,:] = t_wt*fr_targets.squeeze() + m_wt*fr_masker[t].squeeze()      
+
+            if t_wt + m_wt >= 1: singleConfigSpks[t,ch,:] = singleConfigSpks[t,ch,:] / (t_wt + m_wt)
+    
+    if singleConfigSpks.shape[2] < padToTime/dt:
+        padSize = int(padToTime/dt)-singleConfigSpks.shape[2]
+        singleConfigSpks = np.concatenate([singleConfigSpks, np.zeros((trials,spatialCurves.shape[0],padSize))], axis=2)
+    
+    spks =  singleConfigSpks.transpose(2,1,0) * newStrfGain / strfGain  # Shape to (time, chans, trials)
+
+    return spks
+
+
+
 
 
 
