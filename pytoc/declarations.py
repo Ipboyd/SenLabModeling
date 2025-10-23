@@ -18,7 +18,7 @@ def Declare_Architecture(opts):
     Offset_input = Lif_Neuron.Build_Vars(name = 'Off',is_input=1)
     Relay_1 = Lif_Neuron.Build_Vars(name = 'ROn',is_output=1,is_noise=1)
 
-    neurons = [Onset_input, Relay_1]
+    neurons = [Onset_input,Offset_input,Relay_1]
 
     #---------------------------------------------------------------------#
     # Next, please declare your synapses and respective synapse properies #
