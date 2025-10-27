@@ -1,7 +1,5 @@
 output
 old_
-genPoissonInputs.py
-genPoissonTimes.py
 __pycache__
 .vscode
 resampled-stimuli
