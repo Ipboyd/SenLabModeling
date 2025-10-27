@@ -14,8 +14,8 @@ def Declare_Architecture(opts):
     from mechs import Lif_Neuron
     from mechs import Lif_Synapse
 
-    Onset_input = Lif_Neuron.Build_Vars(name = 'On',is_input=1, N_chans = opts['N_channels'])
-    Offset_input = Lif_Neuron.Build_Vars(name = 'Off',is_input=1)
+    Onset_input = Lif_Neuron.Build_Vars(name = 'On',is_input=1, response = 'onset')
+    Offset_input = Lif_Neuron.Build_Vars(name = 'Off',is_input=1, response = 'offset')
     Relay_1 = Lif_Neuron.Build_Vars(name = 'ROn',is_output=1,is_noise=1)
 
     neurons = [Onset_input,Offset_input,Relay_1]

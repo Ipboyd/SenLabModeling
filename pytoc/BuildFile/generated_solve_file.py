@@ -118,7 +118,7 @@ def solve_run(inputs,noise_token):
     ROn_g_ad = np.zeros((1,10,1,2))
     ROn_tspike = np.ones((1,10,1,5)) * -30
     ROn_buffer_index = np.ones((1,10,1))
-    ROn_spikes_holder = np.zeros((1,10,1,3000))
+    ROn_spikes_holder = np.zeros((1,10,1,29800))
     ROn_noise_sn = np.zeros((1,10,1,2))
     ROn_noise_xn = np.zeros((1,10,1,2))
     On_ROn_PSC_s = np.zeros((1,10,1,2))
@@ -132,18 +132,18 @@ def solve_run(inputs,noise_token):
     Off_ROn_PSC_P = np.ones((1,10,1,2))
     Off_ROn_PSC_q = np.ones((1,10,1,2))
 
-    for timestep,t in enumerate(np.arange(0,3000+0.1,0.1)):
+    for timestep,t in enumerate(np.arange(0,29800*0.1,0.1)):
 
 
         #Declare ODES
 
-        On_V_k1 = (((On_E_L - On_V[:,:,:,-1]) - On_R*On_g_ad[:,:,:,-1]*(On_V[:,:,:,-1]-On_E_k) - On_R*On_g_postIC*inputs[timestep]*On_netcon*(On_V[:,:,:,-1]-On_E_exc) + On_R*On_Itonic*On_Imask) / On_tau)
+        On_V_k1 = (((On_E_L - On_V[:,:,:,-1]) - On_R*On_g_ad[:,:,:,-1]*(On_V[:,:,:,-1]-On_E_k) - On_R*On_g_postIC*inputs[0][:,timestep]*np.array(On_netcon)*(On_V[:,:,:,-1]-On_E_exc) + On_R*On_Itonic*np.array(On_Imask)) / On_tau)
         On_g_ad_k1 = On_g_ad[:,:,:,-1] / On_tau_ad
-        Off_V_k1 = (((Off_E_L - Off_V[:,:,:,-1]) - Off_R*Off_g_ad[:,:,:,-1]*(Off_V[:,:,:,-1]-Off_E_k) - Off_R*Off_g_postIC*inputs[timestep]*Off_netcon*(Off_V[:,:,:,-1]-Off_E_exc) + Off_R*Off_Itonic*Off_Imask) / Off_tau)
+        Off_V_k1 = (((Off_E_L - Off_V[:,:,:,-1]) - Off_R*Off_g_ad[:,:,:,-1]*(Off_V[:,:,:,-1]-Off_E_k) - Off_R*Off_g_postIC*inputs[1][:,timestep]*np.array(Off_netcon)*(Off_V[:,:,:,-1]-Off_E_exc) + Off_R*Off_Itonic*np.array(Off_Imask)) / Off_tau)
         Off_g_ad_k1 = Off_g_ad[:,:,:,-1] / Off_tau_ad
-        ROn_V_k1 = (((ROn_E_L - ROn_V[:,:,:,-1]) - ROn_R*ROn_g_ad[:,:,:,-1]*(ROn_V[:,:,:,-1]-ROn_E_k) - ROn_R*(On_ROn_gSYN*On_ROn_PSC_s[:,:,:,-1]*On_ROn_netcon*(ROn_V[:,:,:,-1]-On_ROn_ESYN) +Off_ROn_gSYN*Off_ROn_PSC_s[:,:,:,-1]*Off_ROn_netcon*(ROn_V[:,:,:,-1]-Off_ROn_ESYN) ) + ROn_R*ROn_Itonic*ROn_Imask) / ROn_tau) + (-ROn_R * ROn_nSYN * ROn_noise_sn[:,:,:,-1]*(ROn_V[:,:,:,-1])-ROn_noise_E_exc) / ROn_tau)
+        ROn_V_k1 = (((ROn_E_L - ROn_V[:,:,:,-1]) - ROn_R*ROn_g_ad[:,:,:,-1]*(ROn_V[:,:,:,-1]-ROn_E_k) - ROn_R*(On_ROn_gSYN*On_ROn_PSC_s[:,:,:,-1]*np.array(On_ROn_netcon)*(ROn_V[:,:,:,-1]-On_ROn_ESYN) +Off_ROn_gSYN*Off_ROn_PSC_s[:,:,:,-1]*np.array(Off_ROn_netcon)*(ROn_V[:,:,:,-1]-Off_ROn_ESYN) ) + ROn_R*ROn_Itonic*np.array(ROn_Imask)) / ROn_tau) + ((-ROn_R * ROn_nSYN * ROn_noise_sn[:,:,:,-1]*(ROn_V[:,:,:,-1])-ROn_noise_E_exc) / ROn_tau)
         ROn_noise_sn_k1 = (ROn_noise_scale * ROn_noise_xn[:,:,:,-1] - ROn_noise_sn[:,:,:,-1]) / ROn_tauR_N
-        ROn_noise_xn_k1 = -(ROn_noise_xn[:,:,:,-1]/ROn_tauD_N) + noise_token[timestep]/0.1
+        ROn_noise_xn_k1 = -(ROn_noise_xn[:,:,:,-1]/ROn_tauD_N) + noise_token[:,timestep]/0.1
         ROn_g_ad_k1 = ROn_g_ad[:,:,:,-1] / ROn_tau_ad
         On_ROn_PSC_s_k1 = (On_ROn_scale*On_ROn_PSC_x[:,:,:,-1] - On_ROn_PSC_s[:,:,:,-1]) / On_ROn_tauR
         On_ROn_PSC_x_k1 = -On_ROn_PSC_x[:,:,:,-1]/On_ROn_tauD
@@ -211,7 +211,7 @@ def solve_run(inputs,noise_token):
         lin_On = (flat_On*5 + row_On).astype(np.int64)
         tspike_flat_On[lin_On] = t
         mask_flat_On = (On_mask.reshape(B_On*Tr_On*N_On)).astype(np.int64)
-        buffer_flat_On[:] = ((buffer_flat_On - 1) + mask_flat_On) % K + 1
+        buffer_flat_On[:] = ((buffer_flat_On - 1) + mask_flat_On) % 5 + 1
         On_tspike = tspike_flat_On.reshape(B_On,Tr_On,N_On,5)
         On_buffer_index = buffer_flat_On.reshape(B_On,Tr_On,N_On)
         On_mask_ref = np.any(t <= (On_tspike + On_t_ref), axis=-1)
@@ -231,14 +231,14 @@ def solve_run(inputs,noise_token):
         lin_Off = (flat_Off*5 + row_Off).astype(np.int64)
         tspike_flat_Off[lin_Off] = t
         mask_flat_Off = (Off_mask.reshape(B_Off*Tr_Off*N_Off)).astype(np.int64)
-        buffer_flat_Off[:] = ((buffer_flat_Off - 1) + mask_flat_Off) % K + 1
+        buffer_flat_Off[:] = ((buffer_flat_Off - 1) + mask_flat_Off) % 5 + 1
         Off_tspike = tspike_flat_Off.reshape(B_Off,Tr_Off,N_Off,5)
         Off_buffer_index = buffer_flat_Off.reshape(B_Off,Tr_Off,N_Off)
         Off_mask_ref = np.any(t <= (Off_tspike + Off_t_ref), axis=-1)
         Off_V[:,:,:,-2] = np.where(Off_mask_ref,Off_V[:,:,:,-1], Off_V[:,:,:,-2])
         Off_V[:,:,:,-1] = np.where(Off_mask_ref, Off_V_reset,Off_V[:,:,:,-1])
         ROn_mask = ((ROn_V[:,:,:,-1] >= ROn_V_thresh) & (ROn_V[:,:,:,-2] < ROn_V_thresh)).astype(np.int8)
-        ROn_spikes_holder[:,:,:,t] = ROn_mask
+        ROn_spikes_holder[:,:,:,timestep] = ROn_mask
         ROn_V[:,:,:,-2] = np.where(ROn_mask,ROn_V[:,:,:,-1], ROn_V[:,:,:,-2])
         ROn_V[:,:,:,-1] = np.where(ROn_mask,ROn_V_reset, ROn_V[:,:,:,-1])
         ROn_g_ad[:,:,:,-2] = np.where(ROn_mask,ROn_g_ad[:,:,:,-1], ROn_g_ad[:,:,:,-2])
@@ -252,7 +252,7 @@ def solve_run(inputs,noise_token):
         lin_ROn = (flat_ROn*5 + row_ROn).astype(np.int64)
         tspike_flat_ROn[lin_ROn] = t
         mask_flat_ROn = (ROn_mask.reshape(B_ROn*Tr_ROn*N_ROn)).astype(np.int64)
-        buffer_flat_ROn[:] = ((buffer_flat_ROn - 1) + mask_flat_ROn) % K + 1
+        buffer_flat_ROn[:] = ((buffer_flat_ROn - 1) + mask_flat_ROn) % 5 + 1
         ROn_tspike = tspike_flat_ROn.reshape(B_ROn,Tr_ROn,N_ROn,5)
         ROn_buffer_index = buffer_flat_ROn.reshape(B_ROn,Tr_ROn,N_ROn)
         ROn_mask_ref = np.any(t <= (ROn_tspike + ROn_t_ref), axis=-1)

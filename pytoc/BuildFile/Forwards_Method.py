@@ -35,7 +35,7 @@ def declare_vars(neurons,synapses,options):
     for k in all_declares:
         for variable in k:
             for j in variable.keys():
-                if j != 'name':
+                if j != 'name' and j != 'response':
                     variable_declaration += f'\n    {j} = {variable[j]}'
 
     return variable_declaration
@@ -80,7 +80,7 @@ def declare_holders(neurons, synapses, options):
 
 def declare_loop(options):
 
-    return f"\n\n    for timestep,t in enumerate(np.arange(0,{options['sim_len']}+{options['dt']},{options['dt']})):\n"
+    return f"\n\n    for timestep,t in enumerate(np.arange(0,{options['sim_len']}*{options['dt']},{options['dt']})):\n"
     
 def declare_odes(neurons,synapses,projections,options):
 
@@ -120,23 +120,33 @@ def declare_odes(neurons,synapses,projections,options):
         neuron_name = k["name"]
         #If the node is an input : Use the above equation to write the ODE
         if k['is_input'] == 1:
-            ODE_declaration += f'\n        {neuron_name}_V_k1 = ((({neuron_name}_E_L - {neuron_name}_V[:,:,:,-1]) - {neuron_name}_R*{neuron_name}_g_ad[:,:,:,-1]*({neuron_name}_V[:,:,:,-1]-{neuron_name}_E_k) - {neuron_name}_R*{neuron_name}_g_postIC*inputs[timestep]*{neuron_name}_netcon*({neuron_name}_V[:,:,:,-1]-{neuron_name}_E_exc) + {neuron_name}_R*{neuron_name}_Itonic*{neuron_name}_Imask) / {neuron_name}_tau)'
+
+            if k['response'] == '':
+                raise ValueError(f"error building ODES. You must declare response type when declaring an input.")
+
+            if k['response'] == 'onset':
+                input_str = 'inputs[0][:,timestep]'
+            
+            if k['response'] == 'offset':
+                input_str = 'inputs[1][:,timestep]'
+
+            ODE_declaration += f'\n        {neuron_name}_V_k1 = ((({neuron_name}_E_L - {neuron_name}_V[:,:,:,-1]) - {neuron_name}_R*{neuron_name}_g_ad[:,:,:,-1]*({neuron_name}_V[:,:,:,-1]-{neuron_name}_E_k) - {neuron_name}_R*{neuron_name}_g_postIC*{input_str}*np.array({neuron_name}_netcon)*({neuron_name}_V[:,:,:,-1]-{neuron_name}_E_exc) + {neuron_name}_R*{neuron_name}_Itonic*np.array({neuron_name}_Imask)) / {neuron_name}_tau)'
         
         #If the node is not an input : Use the projections to write the ODE as shown above
         else:
             projections_declaration = ''
             for j in projections[neuron_name]:
-                projections_declaration += f'{j}_gSYN*{j}_PSC_s[:,:,:,-1]*{j}_netcon*({neuron_name}_V[:,:,:,-1]-{j}_ESYN) +'
+                projections_declaration += f'{j}_gSYN*{j}_PSC_s[:,:,:,-1]*np.array({j}_netcon)*({neuron_name}_V[:,:,:,-1]-{j}_ESYN) +'
             projections_declaration = projections_declaration[:-1]
             
-            ODE_declaration += f'\n        {neuron_name}_V_k1 = ((({neuron_name}_E_L - {neuron_name}_V[:,:,:,-1]) - {neuron_name}_R*{neuron_name}_g_ad[:,:,:,-1]*({neuron_name}_V[:,:,:,-1]-{neuron_name}_E_k) - {neuron_name}_R*({projections_declaration}) + {neuron_name}_R*{neuron_name}_Itonic*{neuron_name}_Imask) / {neuron_name}_tau)'
+            ODE_declaration += f'\n        {neuron_name}_V_k1 = ((({neuron_name}_E_L - {neuron_name}_V[:,:,:,-1]) - {neuron_name}_R*{neuron_name}_g_ad[:,:,:,-1]*({neuron_name}_V[:,:,:,-1]-{neuron_name}_E_k) - {neuron_name}_R*({projections_declaration}) + {neuron_name}_R*{neuron_name}_Itonic*np.array({neuron_name}_Imask)) / {neuron_name}_tau)'
         
         if k['is_noise'] == 1:
             #If this is a noise-injected node add onto the same equation as shown above
-            ODE_declaration += f' + (-{neuron_name}_R * {neuron_name}_nSYN * {neuron_name}_noise_sn[:,:,:,-1]*({neuron_name}_V[:,:,:,-1])-{neuron_name}_noise_E_exc) / {neuron_name}_tau)'
+            ODE_declaration += f' + ((-{neuron_name}_R * {neuron_name}_nSYN * {neuron_name}_noise_sn[:,:,:,-1]*({neuron_name}_V[:,:,:,-1])-{neuron_name}_noise_E_exc) / {neuron_name}_tau)'
             #Add in the PSC like ODEs for the noise terms
             ODE_declaration += f'\n        {neuron_name}_noise_sn_k1 = ({neuron_name}_noise_scale * {neuron_name}_noise_xn[:,:,:,-1] - {neuron_name}_noise_sn[:,:,:,-1]) / {neuron_name}_tauR_N'
-            ODE_declaration += f'\n        {neuron_name}_noise_xn_k1 = -({neuron_name}_noise_xn[:,:,:,-1]/{neuron_name}_tauD_N) + noise_token[timestep]/{options["dt"]}'
+            ODE_declaration += f'\n        {neuron_name}_noise_xn_k1 = -({neuron_name}_noise_xn[:,:,:,-1]/{neuron_name}_tauD_N) + noise_token[:,timestep]/{options["dt"]}'
 
         #Declare the adaptation per neuron
         ODE_declaration += f'\n        {neuron_name}_g_ad_k1 = {neuron_name}_g_ad[:,:,:,-1] / {neuron_name}_tau_ad'
@@ -204,7 +214,7 @@ def declare_condtionals(neurons,synapses):
         #------------------------------------------------#
         conditionals_declaration += f'\n        {neuron_name}_mask = (({neuron_name}_V[:,:,:,-1] >= {neuron_name}_V_thresh) & ({neuron_name}_V[:,:,:,-2] < {neuron_name}_V_thresh)).astype(np.int8)'
         if k["is_output"] == 1:
-            conditionals_declaration += f'\n        {neuron_name}_spikes_holder[:,:,:,t] = {neuron_name}_mask'
+            conditionals_declaration += f'\n        {neuron_name}_spikes_holder[:,:,:,timestep] = {neuron_name}_mask'
 
         #Take care of what happens at threshold   %Note -- This is somehwat changed from the dynasim implementation, in that if we are at thrsehold we reset.
         conditionals_declaration += f'\n        {neuron_name}_V[:,:,:,-2] = np.where({neuron_name}_mask,{neuron_name}_V[:,:,:,-1], {neuron_name}_V[:,:,:,-2])'
@@ -236,7 +246,7 @@ def declare_condtionals(neurons,synapses):
 
         #Update the buffer index
         conditionals_declaration += f'\n        mask_flat_{neuron_name} = ({neuron_name}_mask.reshape(B_{neuron_name}*Tr_{neuron_name}*N_{neuron_name})).astype(np.int64)'
-        conditionals_declaration += f'\n        buffer_flat_{neuron_name}[:] = ((buffer_flat_{neuron_name} - 1) + mask_flat_{neuron_name}) % K + 1'
+        conditionals_declaration += f'\n        buffer_flat_{neuron_name}[:] = ((buffer_flat_{neuron_name} - 1) + mask_flat_{neuron_name}) % 5 + 1'
 
         #Reshape the holders back to their original forms
         conditionals_declaration += f'\n        {neuron_name}_tspike = tspike_flat_{neuron_name}.reshape(B_{neuron_name},Tr_{neuron_name},N_{neuron_name},5)'

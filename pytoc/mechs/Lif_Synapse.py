@@ -32,8 +32,6 @@ def Build_Vars(ESYN = 0, tauD = 1.5, tauR = 0.3, delay = 0, gSYN = 1, fF = 0, fP
         if is_convergent == 1:
             netcon = np.ones((1,N_chans)) 
 
-    #Convert netcon to numpy array to be C compatible
-    netcon = np.array(netcon)
 
     #Build dictionary
     return {f'{name}_ESYN' : ESYN,f'{name}_tauD' : tauD,f'{name}_tauR' : tauR,f'{name}_PSC_delay' : delay,f'{name}_gSYN' : gSYN,f'{name}_PSC_fF' : fF,f'{name}_PSC_fP' : fP,f'{name}_tauF' : tauF,f'{name}_tauP' : tauP,f'{name}_PSC_maxF' : maxF , 'name' : name, f'{name}_netcon' : netcon, f'{name}_scale' : scale}

@@ -4,7 +4,7 @@
 #It also names the variables per-neuron with the user specified "name"
 
 import numpy as np
-def Build_Vars(C = 0.1, g_L = 1/200, E_L = -65, noise = 0, t_ref = 1, E_k = -80, tau_ad = 5, g_inc = 0, Itonic = 0, Imask='', N_pop=1 , V_thresh = -47, V_reset = -54, name='', is_output = 0, is_noise = 0, is_input = 0, g_postIC = 0.17, E_exc = 0, netcon = '', N_chans = 1, nSYN = 0, noise_E_exc = 0, tauR_N = 0.7, tauD_N = 1.5):
+def Build_Vars(C = 0.1, g_L = 1/200, E_L = -65, noise = 0, t_ref = 1, E_k = -80, tau_ad = 5, g_inc = 0, Itonic = 0, Imask='', N_pop=1 , V_thresh = -47, V_reset = -54, name='', is_output = 0, is_noise = 0, is_input = 0, g_postIC = 0.17, E_exc = 0, netcon = '', N_chans = 1, nSYN = 0, noise_E_exc = 0, tauR_N = 0.7, tauD_N = 1.5, response = ''):
 
     #All basic variables that are made from the declarations
     R = 1/g_L
@@ -35,10 +35,7 @@ def Build_Vars(C = 0.1, g_L = 1/200, E_L = -65, noise = 0, t_ref = 1, E_k = -80,
         netcon = np.eye(N_chans) 
         Imask = np.ones((1,N_chans)) 
 
-    #Convert netcon to numpy array to be C compatible
-    netcon = np.array(netcon)
-
     #Build dictionary
-    return {f'{name}_C' : C,f'{name}_g_L' : g_L,f'{name}_E_L' : E_L,f'{name}_noise' : noise,f'{name}_t_ref' : t_ref,f'{name}_E_k' : E_k,f'{name}_tau_ad' : tau_ad,f'{name}_g_inc' : g_inc,f'{name}_Itonic' : Itonic, f'{name}_Imask' : Imask, f'{name}_R' : R,f'{name}_tau' : tau, f'{name}_V_thresh' : V_thresh, f'{name}_V_reset' : V_reset, 'name' : name, 'is_output' : is_output, 'is_noise' : is_noise, 'is_input' : is_input, f'{name}_g_postIC' : g_postIC, f'{name}_E_exc' : E_exc, f'{name}_netcon' : netcon, f'{name}_nSYN' : nSYN, f'{name}_noise_E_exc' : noise_E_exc, f'{name}_tauR_N' : tauR_N, f'{name}_tauD_N' : tauD_N, f'{name}_noise_scale' : noise_scale}
+    return {f'{name}_C' : C,f'{name}_g_L' : g_L,f'{name}_E_L' : E_L,f'{name}_noise' : noise,f'{name}_t_ref' : t_ref,f'{name}_E_k' : E_k,f'{name}_tau_ad' : tau_ad,f'{name}_g_inc' : g_inc,f'{name}_Itonic' : Itonic, f'{name}_Imask' : Imask, f'{name}_R' : R,f'{name}_tau' : tau, f'{name}_V_thresh' : V_thresh, f'{name}_V_reset' : V_reset, 'name' : name, 'is_output' : is_output, 'is_noise' : is_noise, 'is_input' : is_input, f'{name}_g_postIC' : g_postIC, f'{name}_E_exc' : E_exc, f'{name}_netcon' : netcon, f'{name}_nSYN' : nSYN, f'{name}_noise_E_exc' : noise_E_exc, f'{name}_tauR_N' : tauR_N, f'{name}_tauD_N' : tauD_N, f'{name}_noise_scale' : noise_scale, 'response' : response}
 
 
