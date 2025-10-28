@@ -7,7 +7,7 @@ import prep_input_data_for_prototypeing
 import prep_input_times_for_prototypeing
 import time
 
-
+from scipy.io import savemat
 
 #Set your runtime options
 opts = set_options.options()
@@ -16,7 +16,7 @@ arch = declarations.Declare_Architecture(opts)
 #Build the forwards euler loop
 file_body_forwards = Forwards_Method.Euler_Compiler(arch[0],arch[1],arch[2],opts)
 #Compile a solve file (python or c++)
-solve_file = Compile_Solve.solve_file_generator(solve_file_body = file_body_forwards, cpp_gen = 0)
+solve_file = Compile_Solve.solve_file_generator(solve_file_body = file_body_forwards, cpp_gen = 1)
 from BuildFile import generated_solve_file
 
 #Prep the input data    
@@ -30,11 +30,14 @@ noise_token = prep_input_times_for_prototypeing.gen_poisson_times_parallel(
 
 start = time.perf_counter()   # high-res timer
 
-for tt in range(50):
-    ouput = generated_solve_file.solve_run([on_spks,off_spks],noise_token)
+output = generated_solve_file.solve_run(on_spks,off_spks,noise_token) #Be explicit and broadcast everything to 4D. This is the only way to make pythran happy
 
 elapsed = time.perf_counter() - start
 print(f"{elapsed*1000:.2f} ms")
+
+
+
+savemat("output_compressed.mat", {"output": output}, do_compression=True)
 
 #Prep the noise tokens
 #noise_tokens = 
