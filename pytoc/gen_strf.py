@@ -218,14 +218,14 @@ def  STRFgen_V2(paramH, paramG, f, dt, maxdelay = 2500, nIn=1, outputNL='linear'
         strf = {}
         strf['type'] = 'lin'
         strf['nIn'] = nIn
-        strf['t'] = np.linspace(0, maxdelay*dt, int(maxdelay/dt+1) ) #0:dt:maxdelay*dt
-        strf['delays'] = np.linspace(0, maxdelay, int(maxdelay/1)+1  ) #0:maxdelay
+        strf['t'] = np.linspace(0, maxdelay*dt, int((maxdelay*dt)/dt)) #0:dt:maxdelay*dt
+        strf['delays'] = np.linspace(0, maxdelay, maxdelay) #0:maxdelay
         strf['nWts'] = (nIn*len(strf['delays']) + 1)
 
         # strf.w1=zeros(nIn,length(delays))
         strf['b1']=0
 
-        nlSet=['linear','logistic','softmax','exponential']
+        nlSet=['linear', 'logistic', 'softmax', 'exponential']
         
         if outputNL in nlSet: strf['outputNL'] = outputNL
         else: raise Exception('linInit >< Unknown Output Nonlinearity!')
@@ -247,11 +247,11 @@ def  STRFgen_V2(paramH, paramG, f, dt, maxdelay = 2500, nIn=1, outputNL='linear'
         # Temporal parameters from Adelson and Bergen 1985, J Opt Soc Am A   
         t = strf['t'] # time delay
 
-        strf['H'] = np.exp(-t/paramH['alpha'])*(paramH['SC1']*((t/paramH['alpha'])**(paramH.N1/math.factorial(paramH.N1))) - \
-        paramH['SC2'] * ((t/paramH['alpha'])**paramH.N2/math.factorial(paramH.N2)))
+        strf['H'] = np.exp(-t/paramH['alpha'])*(paramH['SC1']*(t/paramH['alpha'])**paramH['N1']/math.factorial(paramH['N1']) - \
+        paramH['SC2'] * (t/paramH['alpha'])**paramH['N2']/math.factorial(paramH['N2']))
         
-        strf['G'] = np.exp(-0.5*((f-paramG.f0)/paramG.BW)**2)* np.cos(2*np.pi*paramG['BSM']*(f-paramG['f0']))
-        strf['w1']=strf['G'].transpose()*strf['H']
+        strf['G'] = np.exp(-0.5*((f-paramG['f0'])/paramG['BW'])**2)* np.cos(2*np.pi*paramG['BSM']*(f-paramG['f0']))
+        strf['w1']=strf['G'][:, np.newaxis]*strf['H'][np.newaxis, :]
         strf['f']=f
         
         return strf
@@ -259,58 +259,59 @@ def  STRFgen_V2(paramH, paramG, f, dt, maxdelay = 2500, nIn=1, outputNL='linear'
 
 
 
-def linFwd_Junzi(strf, stim, nSample):
+def linFwd_Junzi(strf, stim, ):
 
         eps = sys.float_info.epsilon
         realmin = sys.float_info.min
         realmax = sys.float_info.max
         
-        samplesize = nSample
+        samplesize = stim.shape[0]
 
         a = np.zeros((samplesize, 1))
         
         for ti in range(len(strf['delays'])):
-                at = np.matmul(stim, strf['w1'][:,ti]) 
+                at = np.matmul(stim, strf['w1'][:,ti][:, np.newaxis]) 
                 
-                thisshift = strf['delays'][ti]
+                thisshift = int(strf['delays'][ti])
                 
-                if thisshift>=0: a[thisshift:-1] = a[thisshift:-1] + at[:-1-thisshift]
-                else: offset = thisshift%samplesize
-                
-                a[:offset] = a[:offset] + at[-thisshift:-1]
+                if thisshift>=0: 
+                        a[thisshift:] = a[thisshift:] + at[:len(at)-thisshift]
+                else: 
+                        offset = thisshift%samplesize
+                        a[:offset] = a[:offset] + at[-thisshift:]
 
-        a = a + strf.b1
+        a = a + strf['b1']
 
         
         if strf['outputNL'] == 'linear':   # Linear outputs 
                 resp_strf = a
 
-        if strf['outputNL'] == 'logistic':   # Logistic outputs
-                # Prevent overflow and underflow: use same bounds as glmerr
-                # Ensure that log(1-y) is computable: need exp(a) > eps
-                maxcut = -np.log(eps)
-                # Ensure that log(y) is computable
-                mincut = -np.log(1/realmin - 1)
-                a = min(a, maxcut)
-                a = max(a, mincut)
-                resp_strf = 1/(1 + np.exp(-a))
+        # if strf['outputNL'] == 'logistic':   # Logistic outputs
+        #         # Prevent overflow and underflow: use same bounds as glmerr
+        #         # Ensure that log(1-y) is computable: need exp(a) > eps
+        #         maxcut = -np.log(eps)
+        #         # Ensure that log(y) is computable
+        #         mincut = -np.log(1/realmin - 1)
+        #         a = np.min(a, maxcut)
+        #         a = np.max(a, mincut)
+        #         resp_strf = 1/(1 + np.exp(-a))
 
-        if strf['outputNL'] ==  'softmax':        # Softmax outputs
-                nout = a.shape[1]
-                # Prevent overflow and underflow: use same bounds as glmerr
-                # Ensure that sum(exp(a), 2) does not overflow
-                maxcut = np.log(realmax) - np.log(nout)
-                # Ensure that exp(a) > 0
-                mincut = np.log(realmin)
-                a = min(a, maxcut)
-                a = max(a, mincut)
-                temp = np.exp(a)
-                resp_strf = temp/(np.sum(temp, 1)*np.ones((1,nout)))
-                # Ensure that log(y) is computable
-                resp_strf[resp_strf<realmin] = realmin
+        # if strf['outputNL'] ==  'softmax':        # Softmax outputs
+        #         nout = a.shape[1]
+        #         # Prevent overflow and underflow: use same bounds as glmerr
+        #         # Ensure that sum(exp(a), 2) does not overflow
+        #         maxcut = np.log(realmax) - np.log(nout)
+        #         # Ensure that exp(a) > 0
+        #         mincut = np.log(realmin)
+        #         a = min(a, maxcut)
+        #         a = max(a, mincut)
+        #         temp = np.exp(a)
+        #         resp_strf = temp/(np.sum(temp, 1)*np.ones((1,nout)))
+        #         # Ensure that log(y) is computable
+        #         resp_strf[resp_strf<realmin] = realmin
 
-        if strf['outputNL'] ==   'exponential':
-                resp_strf=np.exp(a)
+        # if strf['outputNL'] ==   'exponential':
+        #         resp_strf=np.exp(a)
         
         else:
                 raise Exception('Unknown activation function ', strf['outputNL'])
@@ -318,31 +319,22 @@ def linFwd_Junzi(strf, stim, nSample):
 
         # mask for nonvalid frames
         nanmask = strf['delays']%(stim.shape[0]+1)
-        nanmask = nanmask[nanmask!=0] #no mask for delay 0
-        a[nanmask] = np.nan
-        resp_strf[nanmask] = np.nan
+        nanmask = nanmask[nanmask!=0].astype(np.int64) #no mask for delay 0
+        a[nanmask] = 0
+        resp_strf[nanmask] = 0
         
         return strf, resp_strf, a
 
 
 def STRFconvolve_V2(strf, stim_spec, mean_rate):
         
-        t = strf['t']
-        ## convolve STRF and stim
-        # Initialize strflab global variables with our stim and responses
-        
-        # TODO: see if this is an important step
-        # strfData(stim_spec, zeros(size(stim_spec)))
-        
-        
+        t = strf['t']      
         _, frate,_ = linFwd_Junzi(strf, stim_spec) #strfFwd_Junzi(strf)
-        
         frate = frate*mean_rate
-        frate = np.nan_to_num(frate)
         
         # offset rate
-        offset_rate = -frate + max(frate) #-frate + max(frate)*0.6;
-        firstneg = np.where(offset_rate <= 0)[0] #find(offset_rate <= 0,1,'first')
+        offset_rate = -frate + np.max(frate) #-frate + max(frate)*0.6;
+        firstneg = np.where(offset_rate <= 0)[0][0] #find(offset_rate <= 0,1,'first')
 
         if firstneg > 5500: firstneg = 2501 # for AM stimuli
         
@@ -385,7 +377,7 @@ data_path = r'resampled-stimuli'
 
 
 masker_specs = {}
-for trial in range(1, 2):
+for trial in range(1, 11):
         fs, masker = wavfile.read(os.path.join(data_path,f'200k_masker{str(trial)}.wav'))
         masker = masker[np.newaxis, :]
         spec,_,_ = STRFspectrogram(masker/rms(masker)*maskerlvl,fs)
@@ -395,8 +387,11 @@ for trial in range(1, 2):
 s1_sampling_rate, s1_audio_data = wavfile.read(os.path.join(data_path, '200k_target1.wav'))
 s2_sampling_rate, s2_audio_data = wavfile.read(os.path.join(data_path, '200k_target2.wav'))
 
-song1_spec,t,f = STRFspectrogram(s1_audio_data/rms(s1_audio_data)*targetlvl,fs)
-song2_spec,_,_ = STRFspectrogram(s2_audio_data/rms(s2_audio_data)*targetlvl,fs)
+song1 = s1_audio_data[np.newaxis, :]
+song2 = s2_audio_data[np.newaxis, :]
+
+song1_spec,t,f = STRFspectrogram(song1/rms(song1)*targetlvl,fs)
+song2_spec,_,_ = STRFspectrogram(song2/rms(song2)*targetlvl,fs)
 
 specs = {}
 specs[f'songs_{1}'] = song1_spec
@@ -408,8 +403,8 @@ specs['f'] = f
 
 
 # make STRF
-strf = STRFgen_V2(paramH,paramG,specs.f,specs.t(2)-specs.t(1))
-strf.w1 = strf.w1*strfGain
+strf = STRFgen_V2(paramH, paramG, specs['f'], specs['t'][1]-specs['t'][0])
+strf['w1'] = strf['w1']*strfGain
 
 # sum of STRF with gain should be ~43.2;
 # adjust STRF gain for spiking
