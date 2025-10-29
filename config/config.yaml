@@ -1,0 +1,55 @@
+input_spike_train:
+
+  dt: 0.1 # step time in ms
+  offset_val: 3153
+  t_ref: 2.0 # Absolute refractory periods (ms)
+  t_ref_rel: 10.0 # Relative refractory periods (ms)
+  rec: 2.0 # Sharpness of relative refractory function.
+  scale_factor: 1.0
+  refrac: 1.0
+
+
+strf_config:
+  sigma: 24 #60 for bird but 38 for mouse
+  tuning: 'mouse' #'bird' or 'mouse'
+  stimGain: 0.5
+  targetlvl: 0.01
+  maskerlvl: 0.01 #default is 0.01
+  maxWeight: 1 #maximum mixed tuning weight capped at this level.
+  strfGain: 0.1
+  mean_rate: 0.1
+
+  paramH:
+    alpha: 0.01 # time constant of temporal kernel [s] 0.0097
+    N1: 5
+    N2: 8
+    SC1: 1 #Nominally 1
+    SC2: 0.88  #increase -> more inhibition #0.88 in paper 
+  
+  # frequency parameters - static
+  paramG:
+    BW: 2000 # Hz
+    BSM: 5.00E-05 # 1/Hz=s best spectral modulation
+    f0: 4300 # ~strf.f(30)
+
+  paramSpk:
+    t_ref: 1.5
+    t_ref_rel: 0.5
+    rec: 4 
+
+  preprocStimParams:
+    tfType: 'stft' #use short-time FT
+    f: -1
+    stimSampleRate: 10000 # match dynasim sampling rate, or 1000, 5000
+    rawSampleRate: 200000 # Please ensure this follows your stimulus sampling rate
+    stimLenth: 
+
+  tfParams:
+    high_freq: 8000       #specify max freq to analyze
+    low_freq: 500         #specify min freq to analyze
+    log: 1                #take log of spectrogram
+    dbnoise: 80           #cutoff in dB for log spectrogram, ignore anything below this
+    refpow: 0             #reference power for log spectrogram, set to zero for max of spectrograms across stimuli
+    fband: 125
+    nstd: 6
+  
