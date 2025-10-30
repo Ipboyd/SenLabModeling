@@ -138,6 +138,9 @@ def declare_odes(neurons,synapses,projections,options):
         else:
             projections_declaration = ''
             for j in projections[neuron_name]:
+
+                print(projections[neuron_name])
+
                 projections_declaration += f'{j}_gSYN*{j}_PSC_s[:,:,:,-1]*{j}_netcon*({neuron_name}_V[:,:,:,-1]-{j}_ESYN) +'
             projections_declaration = projections_declaration[:-1]
             
@@ -343,9 +346,9 @@ def declare_condtionals(neurons,synapses):
 
 def declare_returns(neurons):
 
-    for k in neurons:
+    return_declaration = ''
 
-        return_declaration = ''
+    for k in neurons:
 
         #Using inplace operations (only saving current and previous step) for memory
         neuron_name = k["name"]
@@ -355,8 +358,10 @@ def declare_returns(neurons):
             return_declaration += f'{neuron_name}_spikes_holder,'
 
     return_declaration = return_declaration[:-1]
+
     #Build out peripherals
     #return_declaration = '\n\n    return [' + return_declaration + ']'
     return_declaration = '\n\n    return ' + return_declaration
+
 
     return return_declaration

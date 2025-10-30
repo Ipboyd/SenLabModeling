@@ -55,14 +55,39 @@ def solve_run(on_input,off_input,noise_token):
     Off_tauR_N = 0.7
     Off_tauD_N = 1.5
     Off_noise_scale = 1.9481350796278847
+    SOnOff_C = 0.1
+    SOnOff_g_L = 0.01
+    SOnOff_E_L = -57
+    SOnOff_noise = 0
+    SOnOff_t_ref = 0.5
+    SOnOff_E_k = -80
+    SOnOff_tau_ad = 5
+    SOnOff_g_inc = 0
+    SOnOff_Itonic = 0
+    SOnOff_Imask = np.ones((1,1))[None,:,:]
+    SOnOff_R = 100.0
+    SOnOff_tau = 10.0
+    SOnOff_V_thresh = -47
+    SOnOff_V_reset = -52
+    is_output = 0
+    is_noise = 0
+    is_input = 0
+    SOnOff_g_postIC = 0.17
+    SOnOff_E_exc = 0
+    SOnOff_netcon = np.eye(1)[None,:,:]
+    SOnOff_nSYN = 0
+    SOnOff_noise_E_exc = 0
+    SOnOff_tauR_N = 0.7
+    SOnOff_tauD_N = 1.5
+    SOnOff_noise_scale = 1.9481350796278847
     ROn_C = 0.1
     ROn_g_L = 0.005
     ROn_E_L = -65
     ROn_noise = 0
     ROn_t_ref = 1
     ROn_E_k = -80
-    ROn_tau_ad = 5
-    ROn_g_inc = 0
+    ROn_tau_ad = 100
+    ROn_g_inc = 0.0003
     ROn_Itonic = 0
     ROn_Imask = np.ones((1,1))[None,:,:]
     ROn_R = 200.0
@@ -82,28 +107,52 @@ def solve_run(on_input,off_input,noise_token):
     ROn_noise_scale = 1.9481350796278847
     On_ROn_ESYN = 0
     On_ROn_tauD = 1.5
-    On_ROn_tauR = 0.3
+    On_ROn_tauR = 0.7
     On_ROn_PSC_delay = 0
-    On_ROn_gSYN = 1
+    On_ROn_gSYN = 0.02
     On_ROn_PSC_fF = 0
-    On_ROn_PSC_fP = 0
+    On_ROn_PSC_fP = 0.1
     On_ROn_tauF = 180
-    On_ROn_tauP = 60
+    On_ROn_tauP = 30
     On_ROn_PSC_maxF = 4
     On_ROn_netcon = np.eye(1)[None,:,:]
-    On_ROn_scale = 1.4953487812212205
-    Off_ROn_ESYN = 0
-    Off_ROn_tauD = 1.5
-    Off_ROn_tauR = 0.3
-    Off_ROn_PSC_delay = 0
-    Off_ROn_gSYN = 1
-    Off_ROn_PSC_fF = 0
-    Off_ROn_PSC_fP = 0
-    Off_ROn_tauF = 180
-    Off_ROn_tauP = 60
-    Off_ROn_PSC_maxF = 4
-    Off_ROn_netcon = np.eye(1)[None,:,:]
-    Off_ROn_scale = 1.4953487812212205
+    On_ROn_scale = 1.9481350796278847
+    On_SOnOff_ESYN = 0
+    On_SOnOff_tauD = 1
+    On_SOnOff_tauR = 0.1
+    On_SOnOff_PSC_delay = 0
+    On_SOnOff_gSYN = 0.085
+    On_SOnOff_PSC_fF = 0
+    On_SOnOff_PSC_fP = 0.2
+    On_SOnOff_tauF = 180
+    On_SOnOff_tauP = 80
+    On_SOnOff_PSC_maxF = 4
+    On_SOnOff_netcon = np.eye(1)[None,:,:]
+    On_SOnOff_scale = 1.2915496650148839
+    Off_SOnOff_ESYN = 0
+    Off_SOnOff_tauD = 1
+    Off_SOnOff_tauR = 0.1
+    Off_SOnOff_PSC_delay = 0
+    Off_SOnOff_gSYN = 0.045
+    Off_SOnOff_PSC_fF = 0
+    Off_SOnOff_PSC_fP = 0
+    Off_SOnOff_tauF = 180
+    Off_SOnOff_tauP = 80
+    Off_SOnOff_PSC_maxF = 4
+    Off_SOnOff_netcon = np.eye(1)[None,:,:]
+    Off_SOnOff_scale = 1.2915496650148839
+    SOnOff_ROn_ESYN = -80
+    SOnOff_ROn_tauD = 4.5
+    SOnOff_ROn_tauR = 1
+    SOnOff_ROn_PSC_delay = 0
+    SOnOff_ROn_gSYN = 0.025
+    SOnOff_ROn_PSC_fF = 0
+    SOnOff_ROn_PSC_fP = 0.5
+    SOnOff_ROn_tauF = 180
+    SOnOff_ROn_tauP = 120
+    SOnOff_ROn_PSC_maxF = 4
+    SOnOff_ROn_netcon = np.eye(1)[None,:,:]
+    SOnOff_ROn_scale = 1.5368523544529802
 
     #Declare Holders
 
@@ -115,6 +164,10 @@ def solve_run(on_input,off_input,noise_token):
     Off_g_ad = np.zeros((1,10,1,2))
     Off_tspike = np.ones((1,10,1,5)) * -30
     Off_buffer_index = np.ones((1,10,1))
+    SOnOff_V = np.ones((1,10,1,2)) * SOnOff_E_L
+    SOnOff_g_ad = np.zeros((1,10,1,2))
+    SOnOff_tspike = np.ones((1,10,1,5)) * -30
+    SOnOff_buffer_index = np.ones((1,10,1))
     ROn_V = np.ones((1,10,1,2)) * ROn_E_L
     ROn_g_ad = np.zeros((1,10,1,2))
     ROn_tspike = np.ones((1,10,1,5)) * -30
@@ -127,11 +180,21 @@ def solve_run(on_input,off_input,noise_token):
     On_ROn_PSC_F = np.ones((1,10,1,2))
     On_ROn_PSC_P = np.ones((1,10,1,2))
     On_ROn_PSC_q = np.ones((1,10,1,2))
-    Off_ROn_PSC_s = np.zeros((1,10,1,2))
-    Off_ROn_PSC_x = np.zeros((1,10,1,2))
-    Off_ROn_PSC_F = np.ones((1,10,1,2))
-    Off_ROn_PSC_P = np.ones((1,10,1,2))
-    Off_ROn_PSC_q = np.ones((1,10,1,2))
+    On_SOnOff_PSC_s = np.zeros((1,10,1,2))
+    On_SOnOff_PSC_x = np.zeros((1,10,1,2))
+    On_SOnOff_PSC_F = np.ones((1,10,1,2))
+    On_SOnOff_PSC_P = np.ones((1,10,1,2))
+    On_SOnOff_PSC_q = np.ones((1,10,1,2))
+    Off_SOnOff_PSC_s = np.zeros((1,10,1,2))
+    Off_SOnOff_PSC_x = np.zeros((1,10,1,2))
+    Off_SOnOff_PSC_F = np.ones((1,10,1,2))
+    Off_SOnOff_PSC_P = np.ones((1,10,1,2))
+    Off_SOnOff_PSC_q = np.ones((1,10,1,2))
+    SOnOff_ROn_PSC_s = np.zeros((1,10,1,2))
+    SOnOff_ROn_PSC_x = np.zeros((1,10,1,2))
+    SOnOff_ROn_PSC_F = np.ones((1,10,1,2))
+    SOnOff_ROn_PSC_P = np.ones((1,10,1,2))
+    SOnOff_ROn_PSC_q = np.ones((1,10,1,2))
 
     for timestep,t in enumerate(np.arange(0,29800*0.1,0.1)):
 
@@ -142,7 +205,9 @@ def solve_run(on_input,off_input,noise_token):
         On_g_ad_k1 = On_g_ad[:,:,:,-1] / On_tau_ad
         Off_V_k1 = (((Off_E_L - Off_V[:,:,:,-1]) - Off_R*Off_g_ad[:,:,:,-1]*(Off_V[:,:,:,-1]-Off_E_k) - Off_R*Off_g_postIC*off_input[:,timestep,:]*Off_netcon*(Off_V[:,:,:,-1]-Off_E_exc) + Off_R*Off_Itonic*Off_Imask) / Off_tau)
         Off_g_ad_k1 = Off_g_ad[:,:,:,-1] / Off_tau_ad
-        ROn_V_k1 = (((ROn_E_L - ROn_V[:,:,:,-1]) - ROn_R*ROn_g_ad[:,:,:,-1]*(ROn_V[:,:,:,-1]-ROn_E_k) - ROn_R*(On_ROn_gSYN*On_ROn_PSC_s[:,:,:,-1]*On_ROn_netcon*(ROn_V[:,:,:,-1]-On_ROn_ESYN) +Off_ROn_gSYN*Off_ROn_PSC_s[:,:,:,-1]*Off_ROn_netcon*(ROn_V[:,:,:,-1]-Off_ROn_ESYN) ) + ROn_R*ROn_Itonic*ROn_Imask) / ROn_tau) + ((-ROn_R * ROn_nSYN * ROn_noise_sn[:,:,:,-1]*(ROn_V[:,:,:,-1])-ROn_noise_E_exc) / ROn_tau)
+        SOnOff_V_k1 = (((SOnOff_E_L - SOnOff_V[:,:,:,-1]) - SOnOff_R*SOnOff_g_ad[:,:,:,-1]*(SOnOff_V[:,:,:,-1]-SOnOff_E_k) - SOnOff_R*(On_SOnOff_gSYN*On_SOnOff_PSC_s[:,:,:,-1]*On_SOnOff_netcon*(SOnOff_V[:,:,:,-1]-On_SOnOff_ESYN) +Off_SOnOff_gSYN*Off_SOnOff_PSC_s[:,:,:,-1]*Off_SOnOff_netcon*(SOnOff_V[:,:,:,-1]-Off_SOnOff_ESYN) ) + SOnOff_R*SOnOff_Itonic*SOnOff_Imask) / SOnOff_tau)
+        SOnOff_g_ad_k1 = SOnOff_g_ad[:,:,:,-1] / SOnOff_tau_ad
+        ROn_V_k1 = (((ROn_E_L - ROn_V[:,:,:,-1]) - ROn_R*ROn_g_ad[:,:,:,-1]*(ROn_V[:,:,:,-1]-ROn_E_k) - ROn_R*(On_ROn_gSYN*On_ROn_PSC_s[:,:,:,-1]*On_ROn_netcon*(ROn_V[:,:,:,-1]-On_ROn_ESYN) +SOnOff_ROn_gSYN*SOnOff_ROn_PSC_s[:,:,:,-1]*SOnOff_ROn_netcon*(ROn_V[:,:,:,-1]-SOnOff_ROn_ESYN) ) + ROn_R*ROn_Itonic*ROn_Imask) / ROn_tau) + ((-ROn_R * ROn_nSYN * ROn_noise_sn[:,:,:,-1]*(ROn_V[:,:,:,-1])-ROn_noise_E_exc) / ROn_tau)
         ROn_noise_sn_k1 = (ROn_noise_scale * ROn_noise_xn[:,:,:,-1] - ROn_noise_sn[:,:,:,-1]) / ROn_tauR_N
         ROn_noise_xn_k1 = -(ROn_noise_xn[:,:,:,-1]/ROn_tauD_N) + noise_token[:,timestep,:]/0.1
         ROn_g_ad_k1 = ROn_g_ad[:,:,:,-1] / ROn_tau_ad
@@ -151,11 +216,21 @@ def solve_run(on_input,off_input,noise_token):
         On_ROn_PSC_F_k1 = (1 - On_ROn_PSC_F[:,:,:,-1])/On_ROn_tauF
         On_ROn_PSC_P_k1 = (1 - On_ROn_PSC_P[:,:,:,-1])/On_ROn_tauP
         On_ROn_PSC_q_k1 = 0
-        Off_ROn_PSC_s_k1 = (Off_ROn_scale*Off_ROn_PSC_x[:,:,:,-1] - Off_ROn_PSC_s[:,:,:,-1]) / Off_ROn_tauR
-        Off_ROn_PSC_x_k1 = -Off_ROn_PSC_x[:,:,:,-1]/Off_ROn_tauD
-        Off_ROn_PSC_F_k1 = (1 - Off_ROn_PSC_F[:,:,:,-1])/Off_ROn_tauF
-        Off_ROn_PSC_P_k1 = (1 - Off_ROn_PSC_P[:,:,:,-1])/Off_ROn_tauP
-        Off_ROn_PSC_q_k1 = 0
+        On_SOnOff_PSC_s_k1 = (On_SOnOff_scale*On_SOnOff_PSC_x[:,:,:,-1] - On_SOnOff_PSC_s[:,:,:,-1]) / On_SOnOff_tauR
+        On_SOnOff_PSC_x_k1 = -On_SOnOff_PSC_x[:,:,:,-1]/On_SOnOff_tauD
+        On_SOnOff_PSC_F_k1 = (1 - On_SOnOff_PSC_F[:,:,:,-1])/On_SOnOff_tauF
+        On_SOnOff_PSC_P_k1 = (1 - On_SOnOff_PSC_P[:,:,:,-1])/On_SOnOff_tauP
+        On_SOnOff_PSC_q_k1 = 0
+        Off_SOnOff_PSC_s_k1 = (Off_SOnOff_scale*Off_SOnOff_PSC_x[:,:,:,-1] - Off_SOnOff_PSC_s[:,:,:,-1]) / Off_SOnOff_tauR
+        Off_SOnOff_PSC_x_k1 = -Off_SOnOff_PSC_x[:,:,:,-1]/Off_SOnOff_tauD
+        Off_SOnOff_PSC_F_k1 = (1 - Off_SOnOff_PSC_F[:,:,:,-1])/Off_SOnOff_tauF
+        Off_SOnOff_PSC_P_k1 = (1 - Off_SOnOff_PSC_P[:,:,:,-1])/Off_SOnOff_tauP
+        Off_SOnOff_PSC_q_k1 = 0
+        SOnOff_ROn_PSC_s_k1 = (SOnOff_ROn_scale*SOnOff_ROn_PSC_x[:,:,:,-1] - SOnOff_ROn_PSC_s[:,:,:,-1]) / SOnOff_ROn_tauR
+        SOnOff_ROn_PSC_x_k1 = -SOnOff_ROn_PSC_x[:,:,:,-1]/SOnOff_ROn_tauD
+        SOnOff_ROn_PSC_F_k1 = (1 - SOnOff_ROn_PSC_F[:,:,:,-1])/SOnOff_ROn_tauF
+        SOnOff_ROn_PSC_P_k1 = (1 - SOnOff_ROn_PSC_P[:,:,:,-1])/SOnOff_ROn_tauP
+        SOnOff_ROn_PSC_q_k1 = 0
 
         #Declare State Updates
 
@@ -167,6 +242,10 @@ def solve_run(on_input,off_input,noise_token):
         Off_V[:,:,:,-1] = Off_V[:,:,:,-1] + 0.1*Off_V_k1
         Off_g_ad[:,:,:,-2] = Off_g_ad[:,:,:,-1]
         Off_g_ad[:,:,:,-1] = Off_g_ad[:,:,:,-1] + 0.1*Off_g_ad_k1
+        SOnOff_V[:,:,:,-2] = SOnOff_V[:,:,:,-1]
+        SOnOff_V[:,:,:,-1] = SOnOff_V[:,:,:,-1] + 0.1*SOnOff_V_k1
+        SOnOff_g_ad[:,:,:,-2] = SOnOff_g_ad[:,:,:,-1]
+        SOnOff_g_ad[:,:,:,-1] = SOnOff_g_ad[:,:,:,-1] + 0.1*SOnOff_g_ad_k1
         ROn_V[:,:,:,-2] = ROn_V[:,:,:,-1]
         ROn_V[:,:,:,-1] = ROn_V[:,:,:,-1] + 0.1*ROn_V_k1
         ROn_g_ad[:,:,:,-2] = ROn_g_ad[:,:,:,-1]
@@ -185,16 +264,36 @@ def solve_run(on_input,off_input,noise_token):
         On_ROn_PSC_P[:,:,:,-1] = On_ROn_PSC_P[:,:,:,-1] + 0.1*On_ROn_PSC_P_k1
         On_ROn_PSC_q[:,:,:,-2] = On_ROn_PSC_q[:,:,:,-1]
         On_ROn_PSC_q[:,:,:,-1] = On_ROn_PSC_q[:,:,:,-1] + 0.1*On_ROn_PSC_q_k1
-        Off_ROn_PSC_s[:,:,:,-2] = Off_ROn_PSC_s[:,:,:,-1]
-        Off_ROn_PSC_s[:,:,:,-1] = Off_ROn_PSC_s[:,:,:,-1] + 0.1*Off_ROn_PSC_s_k1
-        Off_ROn_PSC_x[:,:,:,-2] = Off_ROn_PSC_x[:,:,:,-1]
-        Off_ROn_PSC_x[:,:,:,-1] = Off_ROn_PSC_x[:,:,:,-1] + 0.1*Off_ROn_PSC_x_k1
-        Off_ROn_PSC_F[:,:,:,-2] = Off_ROn_PSC_F[:,:,:,-1]
-        Off_ROn_PSC_F[:,:,:,-1] = Off_ROn_PSC_F[:,:,:,-1] + 0.1*Off_ROn_PSC_F_k1
-        Off_ROn_PSC_P[:,:,:,-2] = Off_ROn_PSC_P[:,:,:,-1]
-        Off_ROn_PSC_P[:,:,:,-1] = Off_ROn_PSC_P[:,:,:,-1] + 0.1*Off_ROn_PSC_P_k1
-        Off_ROn_PSC_q[:,:,:,-2] = Off_ROn_PSC_q[:,:,:,-1]
-        Off_ROn_PSC_q[:,:,:,-1] = Off_ROn_PSC_q[:,:,:,-1] + 0.1*Off_ROn_PSC_q_k1
+        On_SOnOff_PSC_s[:,:,:,-2] = On_SOnOff_PSC_s[:,:,:,-1]
+        On_SOnOff_PSC_s[:,:,:,-1] = On_SOnOff_PSC_s[:,:,:,-1] + 0.1*On_SOnOff_PSC_s_k1
+        On_SOnOff_PSC_x[:,:,:,-2] = On_SOnOff_PSC_x[:,:,:,-1]
+        On_SOnOff_PSC_x[:,:,:,-1] = On_SOnOff_PSC_x[:,:,:,-1] + 0.1*On_SOnOff_PSC_x_k1
+        On_SOnOff_PSC_F[:,:,:,-2] = On_SOnOff_PSC_F[:,:,:,-1]
+        On_SOnOff_PSC_F[:,:,:,-1] = On_SOnOff_PSC_F[:,:,:,-1] + 0.1*On_SOnOff_PSC_F_k1
+        On_SOnOff_PSC_P[:,:,:,-2] = On_SOnOff_PSC_P[:,:,:,-1]
+        On_SOnOff_PSC_P[:,:,:,-1] = On_SOnOff_PSC_P[:,:,:,-1] + 0.1*On_SOnOff_PSC_P_k1
+        On_SOnOff_PSC_q[:,:,:,-2] = On_SOnOff_PSC_q[:,:,:,-1]
+        On_SOnOff_PSC_q[:,:,:,-1] = On_SOnOff_PSC_q[:,:,:,-1] + 0.1*On_SOnOff_PSC_q_k1
+        Off_SOnOff_PSC_s[:,:,:,-2] = Off_SOnOff_PSC_s[:,:,:,-1]
+        Off_SOnOff_PSC_s[:,:,:,-1] = Off_SOnOff_PSC_s[:,:,:,-1] + 0.1*Off_SOnOff_PSC_s_k1
+        Off_SOnOff_PSC_x[:,:,:,-2] = Off_SOnOff_PSC_x[:,:,:,-1]
+        Off_SOnOff_PSC_x[:,:,:,-1] = Off_SOnOff_PSC_x[:,:,:,-1] + 0.1*Off_SOnOff_PSC_x_k1
+        Off_SOnOff_PSC_F[:,:,:,-2] = Off_SOnOff_PSC_F[:,:,:,-1]
+        Off_SOnOff_PSC_F[:,:,:,-1] = Off_SOnOff_PSC_F[:,:,:,-1] + 0.1*Off_SOnOff_PSC_F_k1
+        Off_SOnOff_PSC_P[:,:,:,-2] = Off_SOnOff_PSC_P[:,:,:,-1]
+        Off_SOnOff_PSC_P[:,:,:,-1] = Off_SOnOff_PSC_P[:,:,:,-1] + 0.1*Off_SOnOff_PSC_P_k1
+        Off_SOnOff_PSC_q[:,:,:,-2] = Off_SOnOff_PSC_q[:,:,:,-1]
+        Off_SOnOff_PSC_q[:,:,:,-1] = Off_SOnOff_PSC_q[:,:,:,-1] + 0.1*Off_SOnOff_PSC_q_k1
+        SOnOff_ROn_PSC_s[:,:,:,-2] = SOnOff_ROn_PSC_s[:,:,:,-1]
+        SOnOff_ROn_PSC_s[:,:,:,-1] = SOnOff_ROn_PSC_s[:,:,:,-1] + 0.1*SOnOff_ROn_PSC_s_k1
+        SOnOff_ROn_PSC_x[:,:,:,-2] = SOnOff_ROn_PSC_x[:,:,:,-1]
+        SOnOff_ROn_PSC_x[:,:,:,-1] = SOnOff_ROn_PSC_x[:,:,:,-1] + 0.1*SOnOff_ROn_PSC_x_k1
+        SOnOff_ROn_PSC_F[:,:,:,-2] = SOnOff_ROn_PSC_F[:,:,:,-1]
+        SOnOff_ROn_PSC_F[:,:,:,-1] = SOnOff_ROn_PSC_F[:,:,:,-1] + 0.1*SOnOff_ROn_PSC_F_k1
+        SOnOff_ROn_PSC_P[:,:,:,-2] = SOnOff_ROn_PSC_P[:,:,:,-1]
+        SOnOff_ROn_PSC_P[:,:,:,-1] = SOnOff_ROn_PSC_P[:,:,:,-1] + 0.1*SOnOff_ROn_PSC_P_k1
+        SOnOff_ROn_PSC_q[:,:,:,-2] = SOnOff_ROn_PSC_q[:,:,:,-1]
+        SOnOff_ROn_PSC_q[:,:,:,-1] = SOnOff_ROn_PSC_q[:,:,:,-1] + 0.1*SOnOff_ROn_PSC_q_k1
 
         #Declare Conditionals
 
@@ -244,6 +343,29 @@ def solve_run(on_input,off_input,noise_token):
         Off_mask_ref = np.any(cmpOff, axis=3)
         Off_V[:,:,:,-2] = np.where(Off_mask_ref,Off_V[:,:,:,-1], Off_V[:,:,:,-2])
         Off_V[:,:,:,-1] = np.where(Off_mask_ref, Off_V_reset,Off_V[:,:,:,-1])
+        SOnOff_mask = ((SOnOff_V[:,:,:,-1] >= SOnOff_V_thresh) & (SOnOff_V[:,:,:,-2] < SOnOff_V_thresh))
+        SOnOff_V[:,:,:,-2] = np.where(SOnOff_mask,SOnOff_V[:,:,:,-1], SOnOff_V[:,:,:,-2])
+        SOnOff_V[:,:,:,-1] = np.where(SOnOff_mask,SOnOff_V_reset, SOnOff_V[:,:,:,-1])
+        SOnOff_g_ad[:,:,:,-2] = np.where(SOnOff_mask,SOnOff_g_ad[:,:,:,-1], SOnOff_g_ad[:,:,:,-2])
+        SOnOff_g_ad[:,:,:,-1] = np.where(SOnOff_mask,SOnOff_g_ad[:,:,:,-1]+SOnOff_g_inc,SOnOff_g_ad[:,:,:,-1])
+        B_SOnOff, Tr_SOnOff, N_SOnOff = SOnOff_mask.shape
+        b_SOnOff, tr_SOnOff, n_SOnOff = np.where(SOnOff_mask != 0)
+        flat_SOnOff = (b_SOnOff*Tr_SOnOff+tr_SOnOff) * N_SOnOff + n_SOnOff
+        tspike_flat_SOnOff = SOnOff_tspike.reshape(B_SOnOff*Tr_SOnOff*N_SOnOff * 5)
+        buffer_flat_SOnOff = SOnOff_buffer_index.reshape(B_SOnOff*Tr_SOnOff*N_SOnOff)
+        row_SOnOff = ((buffer_flat_SOnOff[flat_SOnOff]-1) % 5)
+        lin_SOnOff = (flat_SOnOff*5 + row_SOnOff).astype(np.int64)
+        tspike_flat_SOnOff[lin_SOnOff] = t
+        mask_flat_SOnOff = (SOnOff_mask.reshape(B_SOnOff*Tr_SOnOff*N_SOnOff)).astype(np.int64)
+        buffer_flat_SOnOff[:] = ((buffer_flat_SOnOff - 1) + mask_flat_SOnOff) % 5 + 1
+        SOnOff_tspike = tspike_flat_SOnOff.reshape(B_SOnOff,Tr_SOnOff,N_SOnOff,5)
+        SOnOff_buffer_index = buffer_flat_SOnOff.reshape(B_SOnOff,Tr_SOnOff,N_SOnOff)
+        t4SOnOff = t + np.zeros_like(SOnOff_tspike)
+        tref4SOnOff = SOnOff_t_ref + np.zeros_like(SOnOff_tspike)
+        cmpSOnOff = t4SOnOff <= (SOnOff_tspike + tref4SOnOff)
+        SOnOff_mask_ref = np.any(cmpSOnOff, axis=3)
+        SOnOff_V[:,:,:,-2] = np.where(SOnOff_mask_ref,SOnOff_V[:,:,:,-1], SOnOff_V[:,:,:,-2])
+        SOnOff_V[:,:,:,-1] = np.where(SOnOff_mask_ref, SOnOff_V_reset,SOnOff_V[:,:,:,-1])
         ROn_mask = ((ROn_V[:,:,:,-1] >= ROn_V_thresh) & (ROn_V[:,:,:,-2] < ROn_V_thresh))
         ROn_spikes_holder[:,:,:,timestep] = ROn_mask.astype(np.int8)
         ROn_V[:,:,:,-2] = np.where(ROn_mask,ROn_V[:,:,:,-1], ROn_V[:,:,:,-2])
@@ -280,17 +402,41 @@ def solve_run(on_input,off_input,noise_token):
         On_ROn_PSC_q[:,:,:,-1] = np.where(On_ROn_mask_psc,On_ROn_PSC_F[:,:,:,-1] * On_ROn_PSC_P[:,:,:,-1], On_ROn_PSC_q[:,:,:,-1])
         On_ROn_PSC_F[:,:,:,-1] = np.where(On_ROn_mask_psc,On_ROn_PSC_F[:,:,:,-1] + On_ROn_PSC_fF * (On_ROn_PSC_maxF - On_ROn_PSC_F[:,:,:,-1]), On_ROn_PSC_F[:,:,:,-1])
         On_ROn_PSC_P[:,:,:,-1] = np.where(On_ROn_mask_psc,On_ROn_PSC_P[:,:,:,-1] * (1 - On_ROn_PSC_fP), On_ROn_PSC_P[:,:,:,-1])
-        tOff_ROn = t + np.zeros_like(Off_tspike)
-        Off_ROn_PSC_delay_cmp = Off_ROn_PSC_delay + np.zeros_like(Off_tspike)
-        cmpOff_ROn = tOff_ROn <= (Off_tspike + Off_ROn_PSC_delay_cmp)
-        Off_ROn_mask_psc = np.any(cmpOff_ROn, axis=3)
-        Off_ROn_PSC_x[:,:,:,-2] = np.where(Off_ROn_mask_psc,Off_ROn_PSC_x[:,:,:,-1], Off_ROn_PSC_x[:,:,:,-2])
-        Off_ROn_PSC_q[:,:,:,-2] = np.where(Off_ROn_mask_psc,Off_ROn_PSC_q[:,:,:,-1], Off_ROn_PSC_q[:,:,:,-2])
-        Off_ROn_PSC_F[:,:,:,-2] = np.where(Off_ROn_mask_psc,Off_ROn_PSC_F[:,:,:,-1], Off_ROn_PSC_F[:,:,:,-2])
-        Off_ROn_PSC_P[:,:,:,-2] = np.where(Off_ROn_mask_psc,Off_ROn_PSC_P[:,:,:,-1], Off_ROn_PSC_P[:,:,:,-2])
-        Off_ROn_PSC_x[:,:,:,-1] = np.where(Off_ROn_mask_psc,Off_ROn_PSC_x[:,:,:,-1] + Off_ROn_PSC_q[:,:,:,-1], Off_ROn_PSC_x[:,:,:,-1])
-        Off_ROn_PSC_q[:,:,:,-1] = np.where(Off_ROn_mask_psc,Off_ROn_PSC_F[:,:,:,-1] * Off_ROn_PSC_P[:,:,:,-1], Off_ROn_PSC_q[:,:,:,-1])
-        Off_ROn_PSC_F[:,:,:,-1] = np.where(Off_ROn_mask_psc,Off_ROn_PSC_F[:,:,:,-1] + Off_ROn_PSC_fF * (Off_ROn_PSC_maxF - Off_ROn_PSC_F[:,:,:,-1]), Off_ROn_PSC_F[:,:,:,-1])
-        Off_ROn_PSC_P[:,:,:,-1] = np.where(Off_ROn_mask_psc,Off_ROn_PSC_P[:,:,:,-1] * (1 - Off_ROn_PSC_fP), Off_ROn_PSC_P[:,:,:,-1])
+        tOn_SOnOff = t + np.zeros_like(On_tspike)
+        On_SOnOff_PSC_delay_cmp = On_SOnOff_PSC_delay + np.zeros_like(On_tspike)
+        cmpOn_SOnOff = tOn_SOnOff <= (On_tspike + On_SOnOff_PSC_delay_cmp)
+        On_SOnOff_mask_psc = np.any(cmpOn_SOnOff, axis=3)
+        On_SOnOff_PSC_x[:,:,:,-2] = np.where(On_SOnOff_mask_psc,On_SOnOff_PSC_x[:,:,:,-1], On_SOnOff_PSC_x[:,:,:,-2])
+        On_SOnOff_PSC_q[:,:,:,-2] = np.where(On_SOnOff_mask_psc,On_SOnOff_PSC_q[:,:,:,-1], On_SOnOff_PSC_q[:,:,:,-2])
+        On_SOnOff_PSC_F[:,:,:,-2] = np.where(On_SOnOff_mask_psc,On_SOnOff_PSC_F[:,:,:,-1], On_SOnOff_PSC_F[:,:,:,-2])
+        On_SOnOff_PSC_P[:,:,:,-2] = np.where(On_SOnOff_mask_psc,On_SOnOff_PSC_P[:,:,:,-1], On_SOnOff_PSC_P[:,:,:,-2])
+        On_SOnOff_PSC_x[:,:,:,-1] = np.where(On_SOnOff_mask_psc,On_SOnOff_PSC_x[:,:,:,-1] + On_SOnOff_PSC_q[:,:,:,-1], On_SOnOff_PSC_x[:,:,:,-1])
+        On_SOnOff_PSC_q[:,:,:,-1] = np.where(On_SOnOff_mask_psc,On_SOnOff_PSC_F[:,:,:,-1] * On_SOnOff_PSC_P[:,:,:,-1], On_SOnOff_PSC_q[:,:,:,-1])
+        On_SOnOff_PSC_F[:,:,:,-1] = np.where(On_SOnOff_mask_psc,On_SOnOff_PSC_F[:,:,:,-1] + On_SOnOff_PSC_fF * (On_SOnOff_PSC_maxF - On_SOnOff_PSC_F[:,:,:,-1]), On_SOnOff_PSC_F[:,:,:,-1])
+        On_SOnOff_PSC_P[:,:,:,-1] = np.where(On_SOnOff_mask_psc,On_SOnOff_PSC_P[:,:,:,-1] * (1 - On_SOnOff_PSC_fP), On_SOnOff_PSC_P[:,:,:,-1])
+        tOff_SOnOff = t + np.zeros_like(Off_tspike)
+        Off_SOnOff_PSC_delay_cmp = Off_SOnOff_PSC_delay + np.zeros_like(Off_tspike)
+        cmpOff_SOnOff = tOff_SOnOff <= (Off_tspike + Off_SOnOff_PSC_delay_cmp)
+        Off_SOnOff_mask_psc = np.any(cmpOff_SOnOff, axis=3)
+        Off_SOnOff_PSC_x[:,:,:,-2] = np.where(Off_SOnOff_mask_psc,Off_SOnOff_PSC_x[:,:,:,-1], Off_SOnOff_PSC_x[:,:,:,-2])
+        Off_SOnOff_PSC_q[:,:,:,-2] = np.where(Off_SOnOff_mask_psc,Off_SOnOff_PSC_q[:,:,:,-1], Off_SOnOff_PSC_q[:,:,:,-2])
+        Off_SOnOff_PSC_F[:,:,:,-2] = np.where(Off_SOnOff_mask_psc,Off_SOnOff_PSC_F[:,:,:,-1], Off_SOnOff_PSC_F[:,:,:,-2])
+        Off_SOnOff_PSC_P[:,:,:,-2] = np.where(Off_SOnOff_mask_psc,Off_SOnOff_PSC_P[:,:,:,-1], Off_SOnOff_PSC_P[:,:,:,-2])
+        Off_SOnOff_PSC_x[:,:,:,-1] = np.where(Off_SOnOff_mask_psc,Off_SOnOff_PSC_x[:,:,:,-1] + Off_SOnOff_PSC_q[:,:,:,-1], Off_SOnOff_PSC_x[:,:,:,-1])
+        Off_SOnOff_PSC_q[:,:,:,-1] = np.where(Off_SOnOff_mask_psc,Off_SOnOff_PSC_F[:,:,:,-1] * Off_SOnOff_PSC_P[:,:,:,-1], Off_SOnOff_PSC_q[:,:,:,-1])
+        Off_SOnOff_PSC_F[:,:,:,-1] = np.where(Off_SOnOff_mask_psc,Off_SOnOff_PSC_F[:,:,:,-1] + Off_SOnOff_PSC_fF * (Off_SOnOff_PSC_maxF - Off_SOnOff_PSC_F[:,:,:,-1]), Off_SOnOff_PSC_F[:,:,:,-1])
+        Off_SOnOff_PSC_P[:,:,:,-1] = np.where(Off_SOnOff_mask_psc,Off_SOnOff_PSC_P[:,:,:,-1] * (1 - Off_SOnOff_PSC_fP), Off_SOnOff_PSC_P[:,:,:,-1])
+        tSOnOff_ROn = t + np.zeros_like(SOnOff_tspike)
+        SOnOff_ROn_PSC_delay_cmp = SOnOff_ROn_PSC_delay + np.zeros_like(SOnOff_tspike)
+        cmpSOnOff_ROn = tSOnOff_ROn <= (SOnOff_tspike + SOnOff_ROn_PSC_delay_cmp)
+        SOnOff_ROn_mask_psc = np.any(cmpSOnOff_ROn, axis=3)
+        SOnOff_ROn_PSC_x[:,:,:,-2] = np.where(SOnOff_ROn_mask_psc,SOnOff_ROn_PSC_x[:,:,:,-1], SOnOff_ROn_PSC_x[:,:,:,-2])
+        SOnOff_ROn_PSC_q[:,:,:,-2] = np.where(SOnOff_ROn_mask_psc,SOnOff_ROn_PSC_q[:,:,:,-1], SOnOff_ROn_PSC_q[:,:,:,-2])
+        SOnOff_ROn_PSC_F[:,:,:,-2] = np.where(SOnOff_ROn_mask_psc,SOnOff_ROn_PSC_F[:,:,:,-1], SOnOff_ROn_PSC_F[:,:,:,-2])
+        SOnOff_ROn_PSC_P[:,:,:,-2] = np.where(SOnOff_ROn_mask_psc,SOnOff_ROn_PSC_P[:,:,:,-1], SOnOff_ROn_PSC_P[:,:,:,-2])
+        SOnOff_ROn_PSC_x[:,:,:,-1] = np.where(SOnOff_ROn_mask_psc,SOnOff_ROn_PSC_x[:,:,:,-1] + SOnOff_ROn_PSC_q[:,:,:,-1], SOnOff_ROn_PSC_x[:,:,:,-1])
+        SOnOff_ROn_PSC_q[:,:,:,-1] = np.where(SOnOff_ROn_mask_psc,SOnOff_ROn_PSC_F[:,:,:,-1] * SOnOff_ROn_PSC_P[:,:,:,-1], SOnOff_ROn_PSC_q[:,:,:,-1])
+        SOnOff_ROn_PSC_F[:,:,:,-1] = np.where(SOnOff_ROn_mask_psc,SOnOff_ROn_PSC_F[:,:,:,-1] + SOnOff_ROn_PSC_fF * (SOnOff_ROn_PSC_maxF - SOnOff_ROn_PSC_F[:,:,:,-1]), SOnOff_ROn_PSC_F[:,:,:,-1])
+        SOnOff_ROn_PSC_P[:,:,:,-1] = np.where(SOnOff_ROn_mask_psc,SOnOff_ROn_PSC_P[:,:,:,-1] * (1 - SOnOff_ROn_PSC_fP), SOnOff_ROn_PSC_P[:,:,:,-1])
 
     return ROn_spikes_holder

@@ -2,7 +2,7 @@ import numpy as np
 import scipy.io
 import os
 
-def _spike_generator_batch(rates_TNK, dt=0.1, t_ref=2.0, t_ref_rel=8.0, rec=2.0, seed=None):
+def _spike_generator_batch(rates_TNK, dt=0.1, t_ref=1.0, t_ref_rel=8.0, rec=2.0, seed=None):
     """
     Vectorized Poisson spike generator with absolute and relative refractory periods.
 
