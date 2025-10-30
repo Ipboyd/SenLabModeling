@@ -1,6 +1,7 @@
 import os
 import yaml
 import numpy as np
+import pickle as pk
 
 from argparse import ArgumentParser
 
@@ -57,8 +58,11 @@ print(f'>>>> Number of trials: {fr_maskers.shape[0]}')
 
 prep_input = PrepInput(parsed_args, sub_config)
 
-masker_locs, target_locs = prep_input.make_grid_target_masker_locs()
-list_locs = list(zip(masker_locs, target_locs))
+# masker_locs, target_locs = prep_input.make_grid_target_masker_locs()
+list_locs = [(None, 0), 
+            (None, 1), 
+            (None, 2), 
+            (None, 3)]
 
 spks = prep_input.process_input_from_raw_stim(
             fr_target_on=fr_target_on,
@@ -70,3 +74,7 @@ spks = prep_input.process_input_from_raw_stim(
             off_neuron=True,)
 
 print("Generated spike train keys:", spks.keys())
+
+file_path = 'no_masker.pkl'
+with open(file_path, 'wb') as file:
+    pk.dump(spks, file)
