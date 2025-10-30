@@ -4,6 +4,8 @@ import scipy.io
 from tqdm import tqdm
 from argparse import ArgumentParser
 
+
+
 class PrepInput(object):
     '''
     Class to prepare input data for IC neuron simulations and generating Poisson spikes based on STRF data.
@@ -273,6 +275,64 @@ class PrepInput(object):
         return s
     
     
+    def process_input_from_raw_stim(self, fr_target_on, fr_target_off, fr_masker, strfGain, list_locs, on_neuron=True, off_neuron=True):
+        '''
+        Process input STRF data to generate spike trains for specified masker and target locations.
+        Parameters:
+            fr
+            strf_path : str
+                Path to the .mat file containing STRF data.
+            list_locs : list of tuples
+                List of (masker_location, target_location) pairs.
+            on_neuron : bool
+                Whether to generate spikes for ON neurons.
+            off_neuron : bool
+                Whether to generate spikes for OFF neurons.
+            
+            Returns:    
+                spks_dict : dict
+                    Dictionary containing generated spike trains (adjusted IC and poisson spikes ) for each location and stimulus type.
+                
+                    '''
+        tmax = fr_target_on.shape[1]
+        newStrfGain = strfGain
+        
+        progress_bar = tqdm(list_locs)
+        spks_dict = {}
+        for locs in progress_bar:
+            progress_bar.set_description(f'Generating spikes for Masker Loc: {locs[0]}, Target Loc: {locs[1]}')
+            if on_neuron:
+                spks_dict[f'locs_masker_{locs[0]}_target_{locs[1]}_on'] = {}
+                for stimulus in range(fr_target_on.shape[0]):
+                    on_spks = self.gen_IC_spks(
+                                        tmax=tmax, 
+                                        locs=locs, 
+                                        fr_targets=fr_target_on[stimulus], 
+                                        fr_masker=fr_masker, 
+                                        newStrfGain=newStrfGain, 
+                                        strfGain=strfGain)
+                    
+                    on_poisson_spks = self.gen_poisson_inputs(on_spks)
+                    
+                    spks_dict[f'locs_masker_{locs[0]}_target_{locs[1]}_on'][f'stimulus_{stimulus}_IC_spks'] = on_spks
+                    spks_dict[f'locs_masker_{locs[0]}_target_{locs[1]}_on'][f'stimulus_{stimulus}_poisson_spks'] = on_poisson_spks
+                
+            if off_neuron:
+                spks_dict[f'locs_masker_{locs[0]}_target_{locs[1]}_off'] = {}
+                for stimulus in range(fr_target_off.shape[0]):
+                    off_spks = self.gen_IC_spks(
+                                        tmax=tmax, 
+                                        locs=locs, 
+                                        fr_targets=fr_target_off[stimulus], 
+                                        fr_masker=fr_masker, 
+                                        newStrfGain=newStrfGain, 
+                                        strfGain=strfGain)
+                    off_poisson_spks = self.gen_poisson_inputs(off_spks)
+                    spks_dict[f'locs_masker_{locs[0]}_target_{locs[1]}_off'][f'stimulus_{stimulus}_IC_spks'] = off_spks
+                    spks_dict[f'locs_masker_{locs[0]}_target_{locs[1]}_off'][f'stimulus_{stimulus}_poisson_spks'] = off_poisson_spks
+                    
+        return spks_dict
+    
 if __name__ == "__main__":
     '''
     Example usage of the PrepInput class to generate spike trains based on STRF data.
@@ -295,6 +355,9 @@ if __name__ == "__main__":
     args.add_argument('--FR', type=float, default=8.0, help='Firing rate of neurons in Hz')
     args.add_argument('--std', type=float, default=0.0, help='Standard deviation of the firing rate.')
     args.add_argument('--simlen', type=int, default=35000, help='Number of time steps (default = 35000).')
+    args.add_argument('--target_dir', type=str, default='resampled-stimuli/target', help='directory containing target stimuli')
+    args.add_argument('--masker_dir', type=str, default='resampled-stimuli/masker', help='directory containing masker stimuli')
+        
     parsed_args = args.parse_args()
     
 
@@ -302,7 +365,6 @@ if __name__ == "__main__":
     yaml_path = 'config/config.yaml'
     config = yaml.safe_load(open(yaml_path, 'r'))
     sub_config = config['input_spike_train']
-    
     
     prep_input = PrepInput(parsed_args, sub_config)
     
