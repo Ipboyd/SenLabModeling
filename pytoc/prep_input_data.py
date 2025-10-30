@@ -299,7 +299,7 @@ if __name__ == "__main__":
     
 
     # the yaml cofig file is constant and does not need to be changed for different runs
-    yaml_path = 'config/neuron_properties.yaml'
+    yaml_path = 'config/config.yaml'
     config = yaml.safe_load(open(yaml_path, 'r'))
     sub_config = config['input_spike_train']
     
