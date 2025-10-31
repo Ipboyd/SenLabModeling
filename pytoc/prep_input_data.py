@@ -176,8 +176,8 @@ class PrepInput(object):
         spike_times = []
 
         #9/17 refractory preiod seems to low compared to real data. Perhaps extend this?
-        n_refab = int(0 / 1000 / dt_sec)  # number of samples for ref. period window
-        #n_refab = int(15 / 1000 / dt_sec)  # number of samples for ref. period window
+        # n_refab = int(0 / 1000 / dt_sec)  # number of samples for ref. period window
+        n_refab = int(15 / 1000 / dt_sec)  # number of samples for ref. period window
         #n_refab = int(30 / 1000 / dt_sec)  # number of samples for ref. period window
         tw = np.arange(n_refab + 1)
 

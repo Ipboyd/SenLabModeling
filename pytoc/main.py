@@ -21,6 +21,7 @@ args.add_argument('--std', type=float, default=0.0, help='Standard deviation of 
 args.add_argument('--simlen', type=int, default=35000, help='Number of time steps (default = 35000).')
 args.add_argument('--target_dir', type=str, default='resampled-stimuli/target', help='directory containing target stimuli')
 args.add_argument('--masker_dir', type=str, default='resampled-stimuli/masker', help='directory containing masker stimuli')
+
     
 parsed_args = args.parse_args()
 
@@ -64,6 +65,7 @@ list_locs = [(None, 0),
             (None, 2), 
             (None, 3)]
 
+print(config['input_spike_train'])
 spks = prep_input.process_input_from_raw_stim(
             fr_target_on=fr_target_on,
             fr_target_off=fr_target_off,
