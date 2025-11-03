@@ -41,15 +41,16 @@ strf_config:
     tfType: 'stft' #use short-time FT
     f: -1
     stimSampleRate: 10000 # match dynasim sampling rate, or 1000, 5000
-    rawSampleRate: 200000 # Please ensure this follows your stimulus sampling rate
-    stimLenth: 
+    samplingRatePoints: 10000 # # Sampling rate of spectrogram in number of points - set at 10 kHz (same dt as Dynasim) 
+    # rawSampleRate: 200000 # Please ensure this follows your stimulus sampling rate
+    # stimLenth: 
 
-  tfParams:
-    high_freq: 8000       #specify max freq to analyze
-    low_freq: 500         #specify min freq to analyze
-    log: 1                #take log of spectrogram
-    dbnoise: 80           #cutoff in dB for log spectrogram, ignore anything below this
-    refpow: 0             #reference power for log spectrogram, set to zero for max of spectrograms across stimuli
-    fband: 125
-    nstd: 6
-  
+    tfParams:
+      high_freq: 8000       #specify max freq to analyze
+      low_freq: 500         #specify min freq to analyze
+      log: 1                #take log of spectrogram
+      dbnoise: 80           #cutoff in dB for log spectrogram, ignore anything below this
+      refpow: 0             #reference power for log spectrogram, set to zero for max of spectrograms across stimuli
+      fband: 125
+      nstd: 6
+    
