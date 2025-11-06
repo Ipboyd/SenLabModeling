@@ -17,7 +17,7 @@ def Declare_Architecture(opts):
     Onset_input = Lif_Neuron.Build_Vars(name = 'On',is_input=1, response = 'onset',g_postIC = 0.17,is_output=0)
     Offset_input = Lif_Neuron.Build_Vars(name = 'Off',is_input=1, response = 'offset',g_postIC = 0.17)
     PV_1 = Lif_Neuron.Build_Vars(name = 'SOnOff',is_output=0, g_L = 1/100, E_L = -57, V_reset = -52, t_ref = 0.5)
-    Relay_1 = Lif_Neuron.Build_Vars(name = 'ROn',is_output=1,is_noise=1, g_inc = 0.0003, tau_ad = 100)
+    Relay_1 = Lif_Neuron.Build_Vars(name = 'ROn',is_output=1,is_noise=0, g_inc = 0.0003, tau_ad = 100,final_grad_node = 1)
 
     neurons = [Onset_input,Offset_input,PV_1,Relay_1]
 
@@ -73,7 +73,7 @@ def Declare_Architecture(opts):
         else:
             projections[post_node] = [k['name']]
 
-    print(projections)
+    #print(projections)
 
     return [neurons,synapses,projections]
 

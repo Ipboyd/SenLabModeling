@@ -1,0 +1,3 @@
+[compiler]
+cxxflags = -O3 -Ofast -march=native -ffast-math -fno-math-errno -funroll-loops -fopenmp
+ldflags  = -fopenmp

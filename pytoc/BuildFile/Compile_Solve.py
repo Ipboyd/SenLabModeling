@@ -29,13 +29,13 @@ def bring_in_imports():
 
 def gen_py_header():
     
-    header = 'def solve_run(on_input,off_input,noise_token):\n'
+    header = 'def solve_run(on_input,off_input,noise_token,data,p):\n'
     
     return header
 
 def gen_cpp_header():
 
-    header = '# pythran export solve_run(float64[:,:,:], float64[:,:,:], float64[:,:,:])\n'
+    header = '# pythran export solve_run(float64[:,:,:], float64[:,:,:], float64[:,:,:], float64[:,:,:], float64[:,:]) -> Tuple[float64[:,:,:,:], float64[:,:,:]]\n'
     #header = '# pythran export solve_run(uint8[:,:,:], uint8[:,:,:], uint8[:,:,:])\n'
 
     return header

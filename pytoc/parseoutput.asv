@@ -5,17 +5,14 @@ output = load('output_compressed.mat');
 
 
 voltage_timecourse = squeeze(output.output);
-figure;
-plot(voltage_timecourse')
-%imshow(voltage_timecourse)
-%daspect([200 1 1]); 
-
+imshow(voltage_timecourse)
+pbaspect([1 20000 1]); 
 
 %%
 
 output2 = squeeze(output.output);
 
-figure(200);
+figure;
 spy(output2)
 
 

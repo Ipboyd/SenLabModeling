@@ -28,9 +28,9 @@ def Build_Vars(ESYN = 0, tauD = 1.5, tauR = 0.3, delay = 0, gSYN = 1, fF = 0, fP
     #If no netcon is given just keep everything within channel
     if len(netcon) < 1:
         if is_convergent == 0:
-            netcon = f'np.eye({N_chans})[None,:,:]' 
+            netcon = f'np.eye({N_chans})'#[None,:,:]' 
         if is_convergent == 1:
-            netcon = f'np.ones((1,{N_chans}))[None,:,:]' 
+            netcon = f'np.ones((1,{N_chans}))'#[None,:,:]' 
 
 
     #Build dictionary

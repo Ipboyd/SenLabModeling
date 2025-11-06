@@ -1,3 +1,5 @@
+from BuildFile import Gradient_Method
+
 def Euler_Compiler(neurons,synapses,projections,options):
     #1. Declare all of the variables
     variable_declaration = declare_vars(neurons,synapses,options)
@@ -17,10 +19,14 @@ def Euler_Compiler(neurons,synapses,projections,options):
     #6. Declare conditionals
     Conditionals_declaration = declare_condtionals(neurons,synapses)
     #print(Conditionals_declaration)
+
+    #6.5 Declare Gradients
+    spikewrtV_declaration, Vwrtspike_declaration, VwrtGsyn_declaration , update_declaration, loss_declaration, return_declaration_grad = Gradient_Method.compileGrad(neurons,synapses,projections,options)
+
     #7. Declare return statement
     Returns_declaration = declare_returns(neurons)
 
-    solve_file_body = variable_declaration+holder_declaration+Euler_loop_declaration+ODE_declaration+State_Update_declaration+Conditionals_declaration+Returns_declaration
+    solve_file_body = variable_declaration + holder_declaration + Euler_loop_declaration + ODE_declaration + VwrtGsyn_declaration + State_Update_declaration + Vwrtspike_declaration + spikewrtV_declaration + Conditionals_declaration + update_declaration + return_declaration_grad + loss_declaration + Returns_declaration
 
     return solve_file_body
 
@@ -31,11 +37,18 @@ def declare_vars(neurons,synapses,options):
     #Set header
     variable_declaration = '\n\n    #Declare Variables\n'
     
+    t = 0
+
     #Loop through all of the neurons,synapses, and options and grab all of the variables
     for k in all_declares:
         for variable in k:
             for j in variable.keys():
-                if j != 'name' and j != 'response':
+                if 'gSYN' in j:
+                    variable_declaration += f'\n    {j} = p[{t}].reshape({options["N_batch"]}, 1, 1)'
+                    #variable_declaration += f'\n    print(np.shape(p[{t}]))'
+
+                    t=t+1
+                elif j != 'name' and j != 'response':
                     variable_declaration += f'\n    {j} = {variable[j]}'
 
     return variable_declaration
@@ -61,6 +74,7 @@ def declare_holders(neurons, synapses, options):
         #Spike holder -- Holds the output of the network -- only save the outputs to the designated output neurons to save memory
         if k["is_output"] == 1:
             holder_declaration += f'\n    {neuron_name}_spikes_holder = np.zeros(({options["N_batch"]},{options["N_trials"]},{options["N_channels"]},{options["sim_len"]}), dtype=np.int8)'
+            #holder_declaration += f'\n    {neuron_name}_voltage_holder = np.zeros(({options["N_batch"]},{options["N_trials"]},{options["N_channels"]},{options["sim_len"]}), dtype=np.int8)'
         #Noise PSC_like terms (Still just within a single neuron)
         if k["is_noise"] == 1:
             holder_declaration += f'\n    {neuron_name}_noise_sn = np.zeros(({options["N_batch"]},{options["N_trials"]},{options["N_channels"]},2))'
@@ -75,8 +89,8 @@ def declare_holders(neurons, synapses, options):
         holder_declaration += f'\n    {synapse_name}_PSC_F = np.ones(({options["N_batch"]},{options["N_trials"]},{options["N_channels"]},2))'
         holder_declaration += f'\n    {synapse_name}_PSC_P = np.ones(({options["N_batch"]},{options["N_trials"]},{options["N_channels"]},2))'
         holder_declaration += f'\n    {synapse_name}_PSC_q = np.ones(({options["N_batch"]},{options["N_trials"]},{options["N_channels"]},2))'
-
-    #holder_declaration += f'\n    print("made it here!")'
+        #Gradient Holders
+        holder_declaration += f'\n    spike_wrt_gsyn_{synapse_name} = np.zeros(({options["N_batch"]},{options["N_trials"]},{options["N_channels"]}))'
 
     return holder_declaration
 
@@ -133,15 +147,15 @@ def declare_odes(neurons,synapses,projections,options):
                 input_str = 'off_input[:,timestep,:]'
 
             ODE_declaration += f'\n        {neuron_name}_V_k1 = ((({neuron_name}_E_L - {neuron_name}_V[:,:,:,-1]) - {neuron_name}_R*{neuron_name}_g_ad[:,:,:,-1]*({neuron_name}_V[:,:,:,-1]-{neuron_name}_E_k) - {neuron_name}_R*{neuron_name}_g_postIC*{input_str}*{neuron_name}_netcon*({neuron_name}_V[:,:,:,-1]-{neuron_name}_E_exc) + {neuron_name}_R*{neuron_name}_Itonic*{neuron_name}_Imask) / {neuron_name}_tau)'
-        
+
         #If the node is not an input : Use the projections to write the ODE as shown above
         else:
             projections_declaration = ''
             for j in projections[neuron_name]:
 
-                print(projections[neuron_name])
-
+                #note! Using np.dot to do the matrix multipication for the network connecitons
                 projections_declaration += f'{j}_gSYN*{j}_PSC_s[:,:,:,-1]*{j}_netcon*({neuron_name}_V[:,:,:,-1]-{j}_ESYN) +'
+
             projections_declaration = projections_declaration[:-1]
             
             ODE_declaration += f'\n        {neuron_name}_V_k1 = ((({neuron_name}_E_L - {neuron_name}_V[:,:,:,-1]) - {neuron_name}_R*{neuron_name}_g_ad[:,:,:,-1]*({neuron_name}_V[:,:,:,-1]-{neuron_name}_E_k) - {neuron_name}_R*({projections_declaration}) + {neuron_name}_R*{neuron_name}_Itonic*{neuron_name}_Imask) / {neuron_name}_tau)'
@@ -155,10 +169,13 @@ def declare_odes(neurons,synapses,projections,options):
             ODE_declaration += f'\n        {neuron_name}_noise_sn_k1 = ({neuron_name}_noise_scale * {neuron_name}_noise_xn[:,:,:,-1] - {neuron_name}_noise_sn[:,:,:,-1]) / {neuron_name}_tauR_N'
             ODE_declaration += f'\n        {neuron_name}_noise_xn_k1 = -({neuron_name}_noise_xn[:,:,:,-1]/{neuron_name}_tauD_N) + noise_token[:,timestep,:]/{options["dt"]}'
 
-            #ODE_declaration += f'\n        print("made it here (PAST ODE)!")'
+
+        #if k['is_output'] == 1:
+        #    ODE_declaration += f'\n        {neuron_name}_voltage_holder[:,:,:,timestep] = {neuron_name}_V[:,:,:,-1]'
+
 
         #Declare the adaptation per neuron
-        ODE_declaration += f'\n        {neuron_name}_g_ad_k1 = {neuron_name}_g_ad[:,:,:,-1] / {neuron_name}_tau_ad'
+        ODE_declaration += f'\n        {neuron_name}_g_ad_k1 = -{neuron_name}_g_ad[:,:,:,-1] / {neuron_name}_tau_ad'
 
     for m in synapses:
         synapse_name = m["name"]
@@ -356,12 +373,13 @@ def declare_returns(neurons):
         #Spike holder -- Holds the output of the network -- only save the outputs to the designated output neurons to save memory
         if k["is_output"] == 1:
             return_declaration += f'{neuron_name}_spikes_holder,'
+            #return_declaration += f'{neuron_name}_voltage_holder,'
 
     return_declaration = return_declaration[:-1]
 
     #Build out peripherals
     #return_declaration = '\n\n    return [' + return_declaration + ']'
-    return_declaration = '\n\n    return ' + return_declaration
+    return_declaration = '\n\n    return ' + return_declaration + ', out_grad'
 
 
     return return_declaration
