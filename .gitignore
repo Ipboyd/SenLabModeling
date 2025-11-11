@@ -3,3 +3,5 @@ old_
 __pycache__
 .vscode
 *.pkl
+all_units_info_with_polished_criteria_modified_perf.mat
+demo_lfp_kernel.pdf
