@@ -34,21 +34,6 @@ from matplotlib import pyplot as plt
 
 
 
-def calc_lfp_classic(cells, sigma, delay, lfp_time):
-    """Calculate LFP from cells"""
-
-    # this is a vectorised computation and as such it might be memory hungry
-    # for long LFP series/large number of cells it may be more efficient to calculate it through looping
-
-    spt = cells["time"]
-    cid = cells["cellid"]
-    
-    t = lfp_time[:, None] - (delay[None, cid] + spt[None, :])
-    kernel_contribs = amp[None, cid] * f_temporal_kernel(t, sigma)
-    lfp = kernel_contribs.sum(1)
-    return lfp
-
-
 def f_temporal_kernel(t, tau):
     """function defining temporal part of the kernel"""
     return np.exp(-(t ** 2) / tau)
