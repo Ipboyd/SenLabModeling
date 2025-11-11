@@ -34,6 +34,7 @@ for k in range(10):
     spks = genPoissonTimes.gen_poisson_times(1,0.1,8,0)
     noise.append(spks)
 
+print(np.shape(noise))
 
 for k in range(10):
     on_spks = genPoissonInputs.gen_poisson_inputs(1,5,'on',1,1,2,1)
@@ -106,7 +107,7 @@ best_loss = 1e32
 best_output = []
 
 t0 = time.perf_counter()
-for epoch in range(5000):
+for epoch in range(1):
 
     output, grads = generated_solve_file.solve_run(all_on_spks,all_off_spks,noise,data,p) #Python Verison to build
     

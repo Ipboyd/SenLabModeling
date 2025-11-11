@@ -56,7 +56,11 @@ def compile_spiking_wrt_odeVoltage(neurons):
 
     for k in neurons:
         neuron_name = k['name']
-        spiking_deriv += f'        tspike_wrt_odeVoltage_{neuron_name} = (t - {neuron_name}_tspike[:,:,:,-1])*(1/(1+np.exp({neuron_name}_V[:,:,:,-2]-{neuron_name}_V_thresh)))*(np.exp(-({neuron_name}_V[:,:,:,-1]-{neuron_name}_V_thresh))/(1+np.exp(-({neuron_name}_V[:,:,:,-1]-{neuron_name}_V_thresh)))**2)\n'
+
+        #More stable version
+        spiking_deriv += f'        tspike_wrt_odeVoltage_{neuron_name} = (t - {neuron_name}_tspike[:,:,:,-1])*np.tanh(-({neuron_name}_V[:,:,:,-2]-{neuron_name}_V_thresh))*(1-np.tanh({neuron_name}_V[:,:,:,-1]-{neuron_name}_V_thresh)**2)\n'
+
+        #spiking_deriv += f'        tspike_wrt_odeVoltage_{neuron_name} = (t - {neuron_name}_tspike[:,:,:,-1])*(1/(1+np.exp({neuron_name}_V[:,:,:,-2]-{neuron_name}_V_thresh)))*(np.exp(-({neuron_name}_V[:,:,:,-1]-{neuron_name}_V_thresh))/(1+np.exp(-({neuron_name}_V[:,:,:,-1]-{neuron_name}_V_thresh)))**2)\n'
         #spiking_deriv += f'        print(np.shape(tspike_wrt_odeVoltage_{neuron_name}))\n'
 
 
@@ -104,7 +108,9 @@ def compile_odeVoltage_wrt_spiking(synapses,options):
         #psc_wrt_spiking += f'        print({pre_node}_tspike[:,:,:,-1])\n'
 
         #Try stable version
-        psc_wrt_spiking += f'        psc_wrt_spiking_{synapse_name} = {options["dt"]}*({synapse_name}_scale*({synapse_name}_PSC_x[:,:,:,-2] + {synapse_name}_PSC_q[:,:,:,-2]*(1/(np.cosh(t-({pre_node}_tspike[:,:,:,-1]+{synapse_name}_PSC_delay))))**2))\n'
+        #psc_wrt_spiking += f'        psc_wrt_spiking_{synapse_name} = {options["dt"]}*({synapse_name}_scale*({synapse_name}_PSC_x[:,:,:,-2] + {synapse_name}_PSC_q[:,:,:,-2]*(1/(np.cosh(t-({pre_node}_tspike[:,:,:,-1]+{synapse_name}_PSC_delay))))**2))\n'
+        #Stable version v2 replace 1/cosh with 1-tanh
+        psc_wrt_spiking += f'        psc_wrt_spiking_{synapse_name} = {options["dt"]}*({synapse_name}_scale*({synapse_name}_PSC_x[:,:,:,-2] + {synapse_name}_PSC_q[:,:,:,-2]*(1-(np.tanh(t-({pre_node}_tspike[:,:,:,-1]+{synapse_name}_PSC_delay))))**2))\n'
 
         #psc_wrt_spiking += f'        print(np.shape(psc_wrt_spiking_{synapse_name}))\n'
 
@@ -123,7 +129,12 @@ def compile_odeVoltage_wrt_gsyn(synapses):
     for k in synapses:
         synapse_name = k['name']
         post_node = k['name'].rsplit('_', 1)[1]
-        voltage_wrt_gsyn += f'        voltage_wrt_gsyn_{synapse_name} = {post_node}_R * ({synapse_name}_PSC_s[:,:,:,-1]*np.dot(({post_node}_V[:,:,:,-1]-{synapse_name}_ESYN).reshape(np.shape({post_node}_V[:,:,:,-1])[0]*np.shape({post_node}_V[:,:,:,-1])[1],np.shape({post_node}_V[:,:,:,-1])[2]),{synapse_name}_netcon).reshape(np.shape({post_node}_V[:,:,:,-1])[0],np.shape({post_node}_V[:,:,:,-1])[1],np.shape({post_node}_V[:,:,:,-1])[2]))/{post_node}_tau\n'
+
+        #python version
+        voltage_wrt_gsyn += f'        voltage_wrt_gsyn_{synapse_name} = ({post_node}_R * {synapse_name}_PSC_s[:,:,:,-1]*{synapse_name}_netcon*({post_node}_V[:,:,:,-1]-{synapse_name}_ESYN))/{post_node}_tau\n'
+
+        #c++ version
+        #voltage_wrt_gsyn += f'        voltage_wrt_gsyn_{synapse_name} = {post_node}_R * ({synapse_name}_PSC_s[:,:,:,-1]*np.dot(({post_node}_V[:,:,:,-1]-{synapse_name}_ESYN).reshape(np.shape({post_node}_V[:,:,:,-1])[0]*np.shape({post_node}_V[:,:,:,-1])[1],np.shape({post_node}_V[:,:,:,-1])[2]),{synapse_name}_netcon).reshape(np.shape({post_node}_V[:,:,:,-1])[0],np.shape({post_node}_V[:,:,:,-1])[1],np.shape({post_node}_V[:,:,:,-1])[2]))/{post_node}_tau\n'
 
 
         #voltage_wrt_gsyn += f'        print(np.shape(voltage_wrt_gsyn_{synapse_name}))\n'
@@ -169,10 +180,13 @@ def compile_loss():
 
     loss_statement += f'    diff = forwards_out_hist - data_hist\n'
 
-    
+    #loss_statement += f'    print(np.shape(diff))\n'
 
 
     loss_statement += f'    PSTH_loss_avg = np.sum(diff * diff, axis=-1)\n'
+
+    #loss_statement += f'    print(PSTH_loss_avg)\n'
+
     loss_statement += f'    PSTH_deriv_avg = 2.0 * np.sum(diff, axis=-1)\n'
     loss_statement += f'    out_grad = PSTH_deriv_avg[:,:,None] *np.sum(grads, axis=-2)\n'
     #loss_statement += f'    print(np.shape(out_grad))\n'
@@ -295,6 +309,8 @@ def compile_updates(local_graph,local_graph_synapses,synapses,VwrtGsyn_declarati
             cur_gsyn = cur_gsyn[:-1]
             cur_gsyn += '\n'
             gsyn_declaration += cur_gsyn
+            #gsyn_declaration += f'        print(np.shape(spike_wrt_gsyn_{synapse_name}))\n'
+            #gsyn_declaration += f'        print(np.max(spike_wrt_gsyn_{synapse_name},axis=0))\n'
 
     return gsyn_declaration
 

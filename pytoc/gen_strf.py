@@ -242,7 +242,7 @@ class GenSTRF(object):
                 # TODO: implement 'wavelet' and 'lyons' tf representations if needed
                 allowedTypes = ['stft'] 
                 if params['tfType'] not in allowedTypes:
-                        raise Exception(f'Unknown time-frequency representation type: {params['tfType']}')
+                        raise Exception(f'Unknown time-frequency representation type: {params["tfType"]}')
 
                 stimStructs = {}
                 maxPower = -1
@@ -481,41 +481,41 @@ class GenSTRF(object):
                 return onset_rate, offset_rate
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
         
-        args = ArgumentParser()
-        args.add_argument('--target_dir', type=str, default='resampled-stimuli/target', help='directory containing target stimuli')
-        args.add_argument('--masker_dir', type=str, default='resampled-stimuli/masker', help='directory containing masker stimuli')
-        parsed_args = args.parse_args()
+#         args = ArgumentParser()
+#         args.add_argument('--target_dir', type=str, default='resampled-stimuli/target', help='directory containing target stimuli')
+#         args.add_argument('--masker_dir', type=str, default='resampled-stimuli/masker', help='directory containing masker stimuli')
+#         parsed_args = args.parse_args()
         
-        yaml_path = 'config/config.yaml'
-        config = yaml.safe_load(open(yaml_path, 'r'))
-        strf_config = config['strf_config']
+#         yaml_path = 'config/config.yaml'
+#         config = yaml.safe_load(open(yaml_path, 'r'))
+#         strf_config = config['strf_config']
 
-        lst_target_stim = [os.path.join(parsed_args.target_dir, stim_path) for stim_path in os.listdir(parsed_args.target_dir)]
-        lst_masker_stim = [os.path.join(parsed_args.masker_dir, stim_path) for stim_path in os.listdir(parsed_args.masker_dir)]
+#         lst_target_stim = [os.path.join(parsed_args.target_dir, stim_path) for stim_path in os.listdir(parsed_args.target_dir)]
+#         lst_masker_stim = [os.path.join(parsed_args.masker_dir, stim_path) for stim_path in os.listdir(parsed_args.masker_dir)]
         
-        gen_strfs = GenSTRF(parsed_args, strf_config, lst_target_stim[0])
+#         gen_strfs = GenSTRF(parsed_args, strf_config, lst_target_stim[0])
         
         
-        target_dict = {}
-        for stim_path in lst_target_stim:
+#         target_dict = {}
+#         for stim_path in lst_target_stim:
                 
-                fr_on, fr_off = gen_strfs.process_stimulus(stim_path, strf_config['targetlvl'], strf_config['stimGain'])
+#                 fr_on, fr_off = gen_strfs.process_stimulus(stim_path, strf_config['targetlvl'], strf_config['stimGain'])
 
-                stim_name = os.path.split(stim_path)[-1].split('.')[0]
-                target_dict[stim_name] = {}
-                target_dict[stim_name]['fr_on'] = fr_on
-                target_dict[stim_name]['fr_off'] = fr_off
+#                 stim_name = os.path.split(stim_path)[-1].split('.')[0]
+#                 target_dict[stim_name] = {}
+#                 target_dict[stim_name]['fr_on'] = fr_on
+#                 target_dict[stim_name]['fr_off'] = fr_off
         
-        masker_dict = {}
-        for stim_path in lst_masker_stim:
-                fr_on, fr_off = gen_strfs.process_stimulus(stim_path, strf_config['maskerlvl'], strf_config['stimGain'])
+#         masker_dict = {}
+#         for stim_path in lst_masker_stim:
+#                 fr_on, fr_off = gen_strfs.process_stimulus(stim_path, strf_config['maskerlvl'], strf_config['stimGain'])
 
-                stim_name = os.path.split(stim_path)[-1].split('.')[0]
-                masker_dict[stim_name] = {}
-                masker_dict[stim_name]['fr_on'] = fr_on
-                masker_dict[stim_name]['fr_off'] = fr_off
+#                 stim_name = os.path.split(stim_path)[-1].split('.')[0]
+#                 masker_dict[stim_name] = {}
+#                 masker_dict[stim_name]['fr_on'] = fr_on
+#                 masker_dict[stim_name]['fr_off'] = fr_off
         
 
 
